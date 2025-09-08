@@ -2,60 +2,205 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>VNX – Official Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VNX — Official</title>
+  <meta name="description" content="VNX is an ERC‑20 token with on‑chain fee routing and staking incentives." />
+  <meta property="og:title" content="VNX — Official" />
+  <meta property="og:description" content="VNX is an ERC‑20 token with on‑chain fee routing and staking incentives." />
+  <meta property="og:image" content="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_1024.png" />
+  <meta name="theme-color" content="#6F3AFF" />
+  <link rel="icon" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_32.svg" type="image/svg+xml" />
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;max-width:900px;margin:40px auto;padding:0 16px;line-height:1.6}
-    header{display:flex;gap:16px;align-items:center}
-    img.logo{width:72px;height:72px;border-radius:16px}
-    code,a{word-break:break-all}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .card{border:1px solid #e5e7eb;border-radius:12px;padding:16px}
-    footer{margin-top:32px;font-size:12px;color:#666}
+    :root{
+      --bg: #0b1020;
+      --card: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.12);
+      --text: #eef2ff;
+      --muted: #b8c1ff;
+      --accent1: #6F3AFF; /* edge */
+      --accent2: #408CFF; /* center */
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text); background:radial-gradient(1200px 600px at 20% -10%, rgba(64,140,255,0.25), transparent 60%),
+                                       radial-gradient(900px 500px at 100% 0%, rgba(111,58,255,0.28), transparent 60%), var(--bg);
+      font: 16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    .container{max-width:1080px;margin:0 auto;padding:24px}
+    header{display:flex;align-items:center;gap:18px;margin:18px 0 28px}
+    header img{width:64px;height:64px;border-radius:14px;box-shadow:var(--shadow)}
+    h1{font-size:28px;margin:0}
+    .muted{color:var(--muted)}
+    .bar{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 24px}
+    .btn{
+      appearance:none;border:1px solid var(--border);background:var(--card);color:var(--text);
+      padding:10px 14px;border-radius:12px;cursor:pointer;transition:.2s;backdrop-filter: blur(6px);
+      box-shadow:var(--shadow); text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    }
+    .btn:hover{border-color:#9aa3ff;background:rgba(255,255,255,0.1)}
+    .grid{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:16px}
+    @media (max-width:780px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card); border:1px solid var(--border); padding:18px; border-radius:var(--radius); backdrop-filter: blur(6px); box-shadow: var(--shadow)}
+    .card h3{margin:0 0 8px;font-size:18px}
+    .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    code.addr{user-select:all; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:14px; color:#d7ddff}
+    .pill{font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,0.06)}
+    footer{margin:28px 0 16px;color:#9fb0ff80;font-size:13px}
+    .hero{
+      position:relative; border-radius:20px; overflow:hidden; padding:18px; border:1px solid var(--border);
+      background: linear-gradient(135deg, rgba(111,58,255,0.22), rgba(64,140,255,0.18));
+      box-shadow:var(--shadow);
+    }
+    .hero h2{margin:0 0 8px; font-size:22px}
+    .hero p{margin:0}
+    .accent{background: linear-gradient(90deg, var(--accent2), var(--accent1)); -webkit-background-clip:text; background-clip:text; color:transparent; font-weight:700}
+    .small{font-size:13px}
   </style>
 </head>
 <body>
-  <header>
-    <img class="logo" src="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_256.png" alt="VNX logo">
-    <div>
-      <h1 style="margin:0">VNX – Official</h1>
-      <div>ERC-20 Token on Ethereum Mainnet</div>
-    </div>
-  </header>
+  <div class="container">
+    <header>
+      <img src="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_256.png" alt="VNX logo">
+      <div>
+        <h1>VNX — Official</h1>
+        <div class="muted small">ERC‑20 token on Ethereum Mainnet • Fee routing • Staking incentives</div>
+        <div class="bar">
+          <a class="btn" href="#how-to-buy">Buy / Trade</a>
+          <button class="btn" id="btnAddMM">Add VNX to MetaMask</button>
+          <a class="btn" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx-tokenlist.json" target="_blank">Tokenlist JSON</a>
+          <a class="btn" href="https://etherscan.io/token/0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41" target="_blank">VNX on Etherscan</a>
+        </div>
+      </div>
+    </header>
 
-  <h2>Contracts</h2>
-  <div class="grid">
-    <div class="card">
-      <b>Token (VNX)</b><br>
-      <code>0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41</code><br>
-      <a href="https://etherscan.io/token/0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41" target="_blank">Etherscan</a>
-    </div>
-    <div class="card">
-      <b>Fee Treasury (FeeCollector)</b><br>
-      <code>0xa3B06e9bFAE1c0cf97fbE45D38f4CB7AF79204Fa</code><br>
-      <a href="https://etherscan.io/address/0xa3B06e9bFAE1c0cf97fbE45D38f4CB7AF79204Fa" target="_blank">Etherscan</a>
-    </div>
-    <div class="card">
-      <b>Staking</b><br>
-      <code>0x75b3812a532A3E9d3487AFAae28FF6e5383EC2f8</code><br>
-      <a href="https://etherscan.io/address/0x75b3812a532A3E9d3487AFAae28FF6e5383EC2f8" target="_blank">Etherscan</a>
-    </div>
-    <div class="card">
-      <b>Uniswap V2 Pair (VNX/ETH)</b><br>
-      <code>0x5De3F5d74e692e7Ed2d999A17b127910ff462845</code><br>
-      <a href="https://etherscan.io/address/0x5De3F5d74e692e7Ed2d999A17b127910ff462845" target="_blank">Etherscan</a>
-    </div>
+    <section class="hero">
+      <h2>Addresses</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Token (VNX) <span class="pill">ERC‑20</span></h3>
+          <div class="row">
+            <code class="addr" id="addrToken">0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41</code>
+            <button class="btn small" data-copy="#addrToken">Copy</button>
+            <a class="btn small" target="_blank" href="https://etherscan.io/token/0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41">Etherscan</a>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Fee Treasury (FeeCollector)</h3>
+          <div class="row">
+            <code class="addr" id="addrFee">0xa3B06e9bFAE1c0cf97fbE45D38f4CB7AF79204Fa</code>
+            <button class="btn small" data-copy="#addrFee">Copy</button>
+            <a class="btn small" target="_blank" href="https://etherscan.io/address/0xa3B06e9bFAE1c0cf97fbE45D38f4CB7AF79204Fa">Etherscan</a>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Staking</h3>
+          <div class="row">
+            <code class="addr" id="addrStake">0x75b3812a532A3E9d3487AFAae28FF6e5383EC2f8</code>
+            <button class="btn small" data-copy="#addrStake">Copy</button>
+            <a class="btn small" target="_blank" href="https://etherscan.io/address/0x75b3812a532A3E9d3487AFAae28FF6e5383EC2f8">Etherscan</a>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Uniswap V2 Pair (VNX / ETH)</h3>
+          <div class="row">
+            <code class="addr" id="addrPair">0x5De3F5d74e692e7Ed2d999A17b127910ff462845</code>
+            <button class="btn small" data-copy="#addrPair">Copy</button>
+            <a class="btn small" target="_blank" href="https://etherscan.io/address/0x5De3F5d74e692e7Ed2d999A17b127910ff462845">Etherscan</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-to-buy" style="margin-top:22px">
+      <div class="card">
+        <h3>Buy / Trade</h3>
+        <p class="muted">Use the Uniswap app and the official VNX token list.</p>
+        <div class="bar">
+          <a class="btn" target="_blank" href="https://app.uniswap.org/#/swap?chain=mainnet&inputCurrency=ETH&outputCurrency=0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41">Open Uniswap</a>
+          <button class="btn" id="btnCopyList">Copy Tokenlist URL</button>
+        </div>
+        <ol class="small">
+          <li>Open Uniswap → <b>⚙ Settings</b> → <b>Token Lists</b>.</li>
+          <li>Click <b>Add list</b>, then paste the URL: <code>https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx-tokenlist.json</code>.</li>
+          <li>Approve the unknown list prompt, then enable the list.</li>
+          <li>In the token selector, search <b>VNX</b> (or paste the token address).</li>
+        </ol>
+      </div>
+    </section>
+
+    <section style="margin-top:22px">
+      <div class="grid">
+        <div class="card">
+          <h3>Logos & Tokenlist</h3>
+          <ul class="small">
+            <li><a target="_blank" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_32.svg">SVG 32×32</a></li>
+            <li><a target="_blank" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_256.png">PNG 256×256</a></li>
+            <li><a target="_blank" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_1024.png">PNG 1024×1024</a></li>
+            <li><a target="_blank" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx-tokenlist.json">Tokenlist JSON</a></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Contact</h3>
+          <p class="small">Email: <a href="mailto:vnxtokenproject@gmail.com">vnx.project@gmail.com</a></p>
+          <p class="small muted">This site is informational only and not investment advice.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2025 VNX • Built for transparency • <span class="accent">Ethereum Mainnet</span></p>
+    </footer>
   </div>
 
-  <h2>Logo & Tokenlist</h2>
-  <ul>
-    <li>32×32 SVG: <a href="https://raw.githubusercontent.com/TON-USER/vnx-assets/main/vnx_logo_32.svg" target="_blank">Download</a></li>
-    <li>256×256 PNG: <a href="https://raw.githubusercontent.com/TON-USER/vnx-assets/main/vnx_logo_256.png" target="_blank">Download</a></li>
-    <li>Tokenlist JSON: <a href="https://raw.githubusercontent.com/TON-USER/vnx-assets/main/vnx-tokenlist.json" target="_blank">Public URL</a></li>
-  </ul>
+  <script>
+    // Copy helpers
+    document.querySelectorAll('[data-copy]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const sel = btn.getAttribute('data-copy');
+        const el = document.querySelector(sel);
+        if(!el) return;
+        const txt = el.textContent.trim();
+        navigator.clipboard.writeText(txt).then(()=>{
+          const prev = btn.textContent; btn.textContent = 'Copied';
+          setTimeout(()=>btn.textContent = prev, 1200);
+        });
+      });
+    });
 
-  <h2>Contact</h2>
-  <p>Email: <a href="mailto:vnx.project@gmail.com">vnxtokenproject@gmail.com</a></p>
+    const listUrl = 'https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx-tokenlist.json';
+    document.getElementById('btnCopyList')?.addEventListener('click', ()=>{
+      navigator.clipboard.writeText(listUrl).then(()=>{
+        const b = document.getElementById('btnCopyList');
+        const prev = b.textContent; b.textContent = 'URL Copied';
+        setTimeout(()=>b.textContent = prev, 1200);
+      })
+    });
+
+    // Add to MetaMask
+    document.getElementById('btnAddMM')?.addEventListener('click', async ()=>{
+      try{
+        if(!window.ethereum){alert('MetaMask not detected');return}
+        const wasAdded = await window.ethereum.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: '0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41',
+              symbol: 'VNX',
+              decimals: 18,
+              image: 'https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_256.png'
+            }
+          }
+        });
+        if(!wasAdded){console.log('User rejected adding VNX')}
+      }catch(e){console.error(e)}
+    });
+  </script>
+</body>
+</html>
 
   <footer>
     <p>© 2025 VNX. This site is informational only and not investment advice.</p>
