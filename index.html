@@ -1,209 +1,554 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VNX — Official</title>
-  <meta name="description" content="VNX is an ERC‑20 token with on‑chain fee routing and staking incentives." />
-  <meta property="og:title" content="VNX — Official" />
-  <meta property="og:description" content="VNX is an ERC‑20 token with on‑chain fee routing and staking incentives." />
-  <meta property="og:image" content="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_1024.png" />
+  <title>VNX — dApp officielle</title>
+  <meta name="description" content="VNX est un ERC‑20 avec frais 0,20% (cap 1 VNX). Achetez, échangez, stakez et envoyez depuis cette page." />
+  <meta property="og:title" content="VNX — dApp officielle" />
+  <meta property="og:description" content="Acheter, échanger, staker et envoyer VNX (ERC‑20) sur Ethereum." />
+  <meta property="og:image" content="https://crz76.github.io/vnx-assets/logo/vnx_logo_200.png" />
   <meta name="theme-color" content="#6F3AFF" />
-  <link rel="icon" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_32.svg" type="image/svg+xml" />
+  <link rel="icon" href="https://crz76.github.io/vnx-assets/logo/vnx_logo_200.png" type="image/png" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.1/dist/ethers.min.js"></script>
   <style>
     :root{
-      --bg: #0b1020;
-      --card: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.12);
-      --text: #eef2ff;
-      --muted: #b8c1ff;
-      --accent1: #6F3AFF; /* edge */
-      --accent2: #408CFF; /* center */
-      --shadow: 0 10px 30px rgba(0,0,0,0.35);
-      --radius: 16px;
+      --bg:#080c18; --panel:#0e1628; --panel2:#0b1322; --text:#ecf0ff; --muted:#aeb8d9;
+      --primary:#6f3aff; --primary2:#408cff; --success:#2bd88f; --danger:#ff4d6d; --warn:#ffb020;
+      --border:rgba(255,255,255,.12); --soft:rgba(255,255,255,.06); --shadow:0 15px 40px rgba(0,0,0,.35);
+      --radius:18px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{
-      margin:0; color:var(--text); background:radial-gradient(1200px 600px at 20% -10%, rgba(64,140,255,0.25), transparent 60%),
-                                       radial-gradient(900px 500px at 100% 0%, rgba(111,58,255,0.28), transparent 60%), var(--bg);
-      font: 16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    body{margin:0;background:
+      radial-gradient(1200px 600px at 20% -10%, rgba(64,140,255,0.18), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, rgba(111,58,255,0.22), transparent 60%), var(--bg);
+      color:var(--text); font: 16px/1.6 Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
     }
-    .container{max-width:1080px;margin:0 auto;padding:24px}
-    header{display:flex;align-items:center;gap:18px;margin:18px 0 28px}
-    header img{width:64px;height:64px;border-radius:14px;box-shadow:var(--shadow)}
+    .container{max-width:1180px;margin:0 auto;padding:20px}
+    header{display:flex;align-items:center;gap:16px;margin:8px 0 18px}
+    header img{width:56px;height:56px;border-radius:14px;box-shadow:var(--shadow)}
     h1{font-size:28px;margin:0}
-    .muted{color:var(--muted)}
-    .bar{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 24px}
-    .btn{
-      appearance:none;border:1px solid var(--border);background:var(--card);color:var(--text);
-      padding:10px 14px;border-radius:12px;cursor:pointer;transition:.2s;backdrop-filter: blur(6px);
-      box-shadow:var(--shadow); text-decoration:none; display:inline-flex; align-items:center; gap:8px;
-    }
-    .btn:hover{border-color:#9aa3ff;background:rgba(255,255,255,0.1)}
-    .grid{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:16px}
-    @media (max-width:780px){.grid{grid-template-columns:1fr}}
-    .card{background:var(--card); border:1px solid var(--border); padding:18px; border-radius:var(--radius); backdrop-filter: blur(6px); box-shadow: var(--shadow)}
-    .card h3{margin:0 0 8px;font-size:18px}
+    .muted{color:var(--muted)} .tiny{font-size:12px} .small{font-size:13px}
     .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    code.addr{user-select:all; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:14px; color:#d7ddff}
-    .pill{font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,0.06)}
-    footer{margin:28px 0 16px;color:#9fb0ff80;font-size:13px}
-    .hero{
-      position:relative; border-radius:20px; overflow:hidden; padding:18px; border:1px solid var(--border);
-      background: linear-gradient(135deg, rgba(111,58,255,0.22), rgba(64,140,255,0.18));
-      box-shadow:var(--shadow);
-    }
-    .hero h2{margin:0 0 8px; font-size:22px}
-    .hero p{margin:0}
-    .accent{background: linear-gradient(90deg, var(--accent2), var(--accent1)); -webkit-background-clip:text; background-clip:text; color:transparent; font-weight:700}
-    .small{font-size:13px}
+    .bar{display:flex;gap:10px;flex-wrap:wrap}
+    .pill{font-size:12px;padding:4px 10px;border:1px solid var(--border);border-radius:999px;background:var(--soft)}
+    .btn{appearance:none;border:1px solid var(--border);background:linear-gradient(180deg, var(--panel), var(--panel2));color:var(--text);
+      padding:10px 14px;border-radius:12px;cursor:pointer;transition:.2s;backdrop-filter: blur(6px);box-shadow:var(--shadow);
+      text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-weight:600}
+    .btn:hover{border-color:#9aa3ff;background:rgba(255,255,255,0.08)}
+    .btn.primary{background:linear-gradient(90deg,var(--primary2),var(--primary));border-color:transparent}
+    .btn.success{background:linear-gradient(90deg,#30dba2,#1ecb85);border-color:transparent}
+    .btn.warn{background:linear-gradient(90deg,#ffcc66,#ff9f43);border-color:transparent}
+    .btn.danger{background:linear-gradient(90deg,#ff7a95,#ff4d6d);border-color:transparent}
+    .btn.ghost{background:var(--soft)}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+    .col-4{grid-column:span 4} .col-6{grid-column:span 6} .col-8{grid-column:span 8} .col-12{grid-column:span 12}
+    @media (max-width:960px){.col-4,.col-6,.col-8{grid-column:span 12}}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04)); border:1px solid var(--border);
+      border-radius:var(--radius); padding:18px; backdrop-filter: blur(6px); box-shadow: var(--shadow)}
+    .card h3{margin:0 0 10px;font-size:18px}
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+    @media (max-width:960px){.hero{grid-template-columns:1fr}}
+    input,select{width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:#0b1322;color:#fff;font-size:14px}
+    input[readonly]{opacity:.9}
+    .field{display:flex;gap:10px;align-items:center}
+    .field > *:first-child{flex:1}
+    .value{font-weight:700}
+    code.addr{user-select:all;font-family: ui-monospace,Menlo,Consolas,monospace; font-size:13px; color:#d7ddff}
+    .link{color:#9bbcff;text-decoration:none}
+    .accent{background:linear-gradient(90deg,var(--primary2),var(--primary));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+    footer{margin:26px 0 12px;color:#9fb0ff90;font-size:13px;text-align:center}
+    .kbd{font-family: ui-monospace,Menlo,Consolas,monospace; background:#0c1426; border:1px solid var(--border); border-radius:6px; padding:2px 6px}
+    /* Toast */
+    .toast{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:10px;z-index:9999}
+    .toast .t{background:#0d1626;border:1px solid var(--border);padding:12px 14px;border-radius:12px;max-width:360px;box-shadow:var(--shadow)}
+    .t.ok{border-color:#1ecb85} .t.err{border-color:#ff4d6d}
+    .spacer{height:8px}
+    .tag{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--soft);border:1px solid var(--border);border-radius:999px}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .hr{height:1px;background:var(--border);margin:10px 0}
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <img src="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_256.png" alt="VNX logo">
+      <img src="https://crz76.github.io/vnx-assets/logo/vnx_logo_200.png" alt="VNX logo" />
       <div>
-        <h1>VNX — Official</h1>
-        <div class="muted small">ERC‑20 token on Ethereum Mainnet • Fee routing • Staking incentives</div>
-        <div class="bar">
-          <a class="btn" href="#how-to-buy">Buy / Trade</a>
-          <button class="btn" id="btnAddMM">Add VNX to MetaMask</button>
-          <a class="btn" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx-tokenlist.json" target="_blank">Tokenlist JSON</a>
-          <a class="btn" href="https://etherscan.io/token/0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41" target="_blank">VNX on Etherscan</a>
+        <h1>VNX — dApp officielle</h1>
+        <div class="muted small">ERC‑20 sur Ethereum • Frais 0,20% (cap 1 VNX) • 70% Stakers / 20% Treasury / 10% Burn</div>
+        <div class="bar" style="margin-top:8px">
+          <a class="btn" href="#acheter">Acheter / Échanger</a>
+          <button class="btn" id="btnConnect">Connecter le wallet</button>
+          <button class="btn" id="btnAddMM">Ajouter VNX à MetaMask</button>
+          <a class="btn" target="_blank" href="https://app.uniswap.org/#/swap?chain=mainnet&inputCurrency=ETH&outputCurrency=0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41">Uniswap</a>
+          <a class="btn" target="_blank" href="https://etherscan.io/token/0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41">Etherscan</a>
+          <a class="btn" target="_blank" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx-tokenlist.json">Tokenlist</a>
         </div>
+      </div>
+      <div style="margin-left:auto" class="small">
+        <div id="net" class="tag">Réseau: <span id="chainLabel">—</span></div>
+        <div class="spacer"></div>
+        <div class="tag">Compte: <span id="acct">non connecté</span></div>
       </div>
     </header>
 
+    <!-- HERO: prix + solde + actions rapides -->
     <section class="hero">
-      <h2>Addresses</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Token (VNX) <span class="pill">ERC‑20</span></h3>
-          <div class="row">
-            <code class="addr" id="addrToken">0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41</code>
-            <button class="btn small" data-copy="#addrToken">Copy</button>
-            <a class="btn small" target="_blank" href="https://etherscan.io/token/0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41">Etherscan</a>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Fee Treasury (FeeCollector)</h3>
-          <div class="row">
-            <code class="addr" id="addrFee">0xa3B06e9bFAE1c0cf97fbE45D38f4CB7AF79204Fa</code>
-            <button class="btn small" data-copy="#addrFee">Copy</button>
-            <a class="btn small" target="_blank" href="https://etherscan.io/address/0xa3B06e9bFAE1c0cf97fbE45D38f4CB7AF79204Fa">Etherscan</a>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Staking</h3>
-          <div class="row">
-            <code class="addr" id="addrStake">0x75b3812a532A3E9d3487AFAae28FF6e5383EC2f8</code>
-            <button class="btn small" data-copy="#addrStake">Copy</button>
-            <a class="btn small" target="_blank" href="https://etherscan.io/address/0x75b3812a532A3E9d3487AFAae28FF6e5383EC2f8">Etherscan</a>
-          </div>
-        </div>
-        <div class="card">
-          <h3>Uniswap V2 Pair (VNX / ETH)</h3>
-          <div class="row">
-            <code class="addr" id="addrPair">0x5De3F5d74e692e7Ed2d999A17b127910ff462845</code>
-            <button class="btn small" data-copy="#addrPair">Copy</button>
-            <a class="btn small" target="_blank" href="https://etherscan.io/address/0x5De3F5d74e692e7Ed2d999A17b127910ff462845">Etherscan</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="how-to-buy" style="margin-top:22px">
       <div class="card">
-        <h3>Buy / Trade</h3>
-        <p class="muted">Use the Uniswap app and the official VNX token list.</p>
-        <div class="bar">
-          <a class="btn" target="_blank" href="https://app.uniswap.org/#/swap?chain=mainnet&inputCurrency=ETH&outputCurrency=0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41">Open Uniswap</a>
-          <button class="btn" id="btnCopyList">Copy Tokenlist URL</button>
+        <h3>Infos marché</h3>
+        <div class="grid-3">
+          <div>
+            <div class="muted tiny">Prix estimé</div>
+            <div class="value" id="pxVNX">—</div>
+            <div class="tiny muted">(dérivé des réserves V2)</div>
+          </div>
+          <div>
+            <div class="muted tiny">Capitalisation (est.)</div>
+            <div class="value" id="mcap">—</div>
+            <div class="tiny muted">(totalSupply × prix)</div>
+          </div>
+          <div>
+            <div class="muted tiny">Réserves pool</div>
+            <div class="value" id="reserves">—</div>
+            <div class="tiny muted">(VNX / WETH)</div>
+          </div>
         </div>
-        <ol class="small">
-          <li>Open Uniswap → <b>⚙ Settings</b> → <b>Token Lists</b>.</li>
-          <li>Click <b>Add list</b>, then paste the URL: <code>https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx-tokenlist.json</code>.</li>
-          <li>Approve the unknown list prompt, then enable the list.</li>
-          <li>In the token selector, search <b>VNX</b> (or paste the token address).</li>
-        </ol>
+        <div class="hr"></div>
+        <div class="grid-2">
+          <div>
+            <div class="muted tiny">Votre solde VNX</div>
+            <div class="value" id="myVNX">—</div>
+          </div>
+          <div>
+            <div class="muted tiny">Staké</div>
+            <div class="value" id="myStaked">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Adresses officielles</h3>
+        <div class="small">Token (VNX) · <code class="addr" id="addrToken">0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41</code></div>
+        <div class="small">Staking · <code class="addr" id="addrStake">0x75b3812a532A3E9d3487AFAae28FF6e5383EC2f8</code></div>
+        <div class="small">Uniswap V2 Router · <code class="addr" id="addrRouter">0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D</code></div>
+        <div class="small">Pair (WETH/VNX) · <code class="addr" id="addrPair">0x5De3F5d74e692e7Ed2d999A17b127910ff462845</code></div>
+        <div class="small">Burn · <code class="addr">0x000000000000000000000000000000000000dEaD</code></div>
+        <div class="bar" style="margin-top:10px">
+          <button class="btn ghost" data-copy="#addrToken">Copier token</button>
+          <a class="btn ghost" target="_blank" href="https://etherscan.io/token/0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41">Etherscan Token</a>
+          <a class="btn ghost" target="_blank" href="https://etherscan.io/address/0x75b3812a532A3E9d3487AFAae28FF6e5383EC2f8">Etherscan Staking</a>
+        </div>
       </div>
     </section>
 
-    <section style="margin-top:22px">
-      <div class="grid">
-        <div class="card">
-          <h3>Logos & Tokenlist</h3>
-          <ul class="small">
-            <li><a target="_blank" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_32.svg">SVG 32×32</a></li>
-            <li><a target="_blank" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_256.png">PNG 256×256</a></li>
-            <li><a target="_blank" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_1024.png">PNG 1024×1024</a></li>
-            <li><a target="_blank" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx-tokenlist.json">Tokenlist JSON</a></li>
-          </ul>
+    <div class="spacer"></div>
+
+    <section id="acheter" class="grid">
+      <!-- SWAP: acheter/vendre via router v2 (support fee-on-transfer) -->
+      <div class="card col-6">
+        <h3>Acheter / Vendre</h3>
+        <div class="small muted">Routes Uniswap V2 (support des tokens à frais). Sélectionnez l'onglet.</div>
+        <div class="bar" style="margin:10px 0">
+          <button class="btn primary" id="tabBuy">Acheter (ETH → VNX)</button>
+          <button class="btn" id="tabSell">Vendre (VNX → ETH)</button>
+          <div style="margin-left:auto" class="small">Slippage <input id="slip" style="width:90px" value="1.0" /> %</div>
         </div>
-        <div class="card">
-          <h3>Contact</h3>
-          <p class="small">Email: <a href="mailto:vnxtokenproject@gmail.com">vnx.project@gmail.com</a></p>
-          <p class="small muted">This site is informational only and not investment advice.</p>
+        <div id="panelBuy">
+          <div class="field"><input id="ethIn" placeholder="Montant ETH" inputmode="decimal"><button class="btn ghost" id="btnMaxEth">Max</button></div>
+          <div class="tiny muted">Recevrez (est.)</div>
+          <input id="vnxOut" readonly>
+          <div class="bar" style="margin-top:10px">
+            <button class="btn success" id="btnBuy">Acheter VNX</button>
+            <a class="btn" target="_blank" href="https://app.uniswap.org/#/swap?chain=mainnet&inputCurrency=ETH&outputCurrency=0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41">Ouvrir Uniswap</a>
+          </div>
         </div>
+        <div id="panelSell" style="display:none">
+          <div class="field"><input id="vnxIn" placeholder="Montant VNX" inputmode="decimal"><button class="btn ghost" id="btnMaxVnx">Max</button></div>
+          <div class="tiny muted">Recevrez (est.)</div>
+          <input id="ethOut" readonly>
+          <div class="bar" style="margin-top:10px">
+            <button class="btn warn" id="btnApprove">Approuver Router</button>
+            <button class="btn danger" id="btnSell">Vendre VNX</button>
+          </div>
+        </div>
+        <div class="tiny muted" style="margin-top:8px">Note: VNX applique 0,20% de frais par transfert (cap 1 VNX). Utilise les fonctions *SupportingFeeOnTransferTokens*.</div>
+      </div>
+
+      <!-- STAKING -->
+      <div class="card col-6">
+        <h3>Staking</h3>
+        <div class="grid-2">
+          <div>
+            <div class="muted tiny">Récompenses en attente</div>
+            <div class="value" id="rewards">—</div>
+          </div>
+          <div>
+            <div class="muted tiny">APR (indicatif)</div>
+            <div class="value" id="apr">—</div>
+          </div>
+        </div>
+        <div class="hr"></div>
+        <div class="field"><input id="amtStake" placeholder="Montant VNX" inputmode="decimal"><button class="btn ghost" id="btnMaxStake">Max</button></div>
+        <div class="bar" style="margin-top:10px">
+          <button class="btn warn" id="btnApproveStake">Approuver Staking</button>
+          <button class="btn success" id="btnDoStake">Stake</button>
+          <button class="btn" id="btnWithdraw">Withdraw</button>
+          <button class="btn" id="btnClaim">Claim</button>
+        </div>
+        <div class="tiny muted" style="margin-top:8px">Le staking reçoit 70% des frais de transfert.</div>
+      </div>
+
+      <!-- ENVOYER VNX -->
+      <div class="card col-6">
+        <h3>Envoyer VNX</h3>
+        <input id="sendTo" placeholder="Adresse destinataire (0x...)"/>
+        <div class="field" style="margin-top:8px"><input id="sendAmount" placeholder="Montant VNX" inputmode="decimal"><button class="btn ghost" id="btnMaxSend">Max</button></div>
+        <div class="small muted" id="sendFeeHint">Frais estimé: —</div>
+        <div class="bar" style="margin-top:10px"><button class="btn primary" id="btnSend">Envoyer</button></div>
+      </div>
+
+      <!-- OUTILS -->
+      <div class="card col-6">
+        <h3>Outils & Liens</h3>
+        <div class="grid-2">
+          <a class="btn" target="_blank" href="https://coinmarketcap.com/dexscan/ethereum/0x5De3F5d74e692e7Ed2d999A17b127910ff462845">DexScan (CMC)</a>
+          <a class="btn" target="_blank" href="https://info.uniswap.org/#/pools/0x5De3F5d74e692e7Ed2d999A17b127910ff462845">Uniswap Info</a>
+          <a class="btn" target="_blank" href="https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx-tokenlist.json">Tokenlist</a>
+          <a class="btn" target="_blank" href="mailto:vnxtokenproject@gmail.com">Contact Email</a>
+        </div>
+        <div class="hr"></div>
+        <div class="tiny muted">Ce site n'est pas un conseil en investissement. Utilisez un wallet compatible (MetaMask, Rabby...).</div>
       </div>
     </section>
 
     <footer>
-      <p>© 2025 VNX • Built for transparency • <span class="accent">Ethereum Mainnet</span></p>
+      <p>© 2025 VNX • Transparence on‑chain • <span class="accent">Ethereum Mainnet</span></p>
     </footer>
   </div>
 
+  <div class="toast" id="toast"></div>
+
   <script>
-    // Copy helpers
-    document.querySelectorAll('[data-copy]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const sel = btn.getAttribute('data-copy');
-        const el = document.querySelector(sel);
-        if(!el) return;
-        const txt = el.textContent.trim();
-        navigator.clipboard.writeText(txt).then(()=>{
-          const prev = btn.textContent; btn.textContent = 'Copied';
-          setTimeout(()=>btn.textContent = prev, 1200);
-        });
-      });
-    });
+  // ===== Config adresses (mainnet) =====
+  const ADDR = {
+    TOKEN:  "0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41",
+    STAKE:  "0x75b3812a532A3E9d3487AFAae28FF6e5383EC2f8",
+    ROUTER: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D", // Uniswap V2
+    PAIR:   "0x5De3F5d74e692e7Ed2d999A17b127910ff462845",
+    WETH:   "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    CHAINLINK_ETHUSD: "0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419" // aggregator v3
+  };
 
-    const listUrl = 'https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx-tokenlist.json';
-    document.getElementById('btnCopyList')?.addEventListener('click', ()=>{
-      navigator.clipboard.writeText(listUrl).then(()=>{
-        const b = document.getElementById('btnCopyList');
-        const prev = b.textContent; b.textContent = 'URL Copied';
-        setTimeout(()=>b.textContent = prev, 1200);
-      })
-    });
+  // ===== ABIs minimales =====
+  const ABI_ERC20 = [
+    "function name() view returns(string)",
+    "function symbol() view returns(string)",
+    "function decimals() view returns(uint8)",
+    "function balanceOf(address) view returns(uint256)",
+    "function totalSupply() view returns(uint256)",
+    "function transfer(address,uint256) returns(bool)",
+    "function allowance(address,address) view returns(uint256)",
+    "function approve(address,uint256) returns(bool)"
+  ];
+  const ABI_STAKE_CANDIDATES = {
+    balanceOf:["balanceOf","stakes","userInfo"],
+    stake:["stake","deposit"],
+    withdraw:["withdraw","unstake"],
+    claim:["claim","claimRewards","getReward","harvest"],
+    pending:["pendingRewards","earned","rewards","pending","getPendingRewards"],
+  };
+  const ABI_STAKE_MIN = [
+    ...ABI_STAKE_CANDIDATES.balanceOf.map(n=>`function ${n}(address) view returns (uint256)`),
+    ...ABI_STAKE_CANDIDATES.stake.map(n=>`function ${n}(uint256)`),
+    ...ABI_STAKE_CANDIDATES.withdraw.map(n=>`function ${n}(uint256)`),
+    ...ABI_STAKE_CANDIDATES.claim.map(n=>`function ${n}()`),
+    ...ABI_STAKE_CANDIDATES.pending.map(n=>`function ${n}(address) view returns (uint256)`)
+  ];
+  const ABI_ROUTER = [
+    "function WETH() view returns(address)",
+    "function getAmountsOut(uint amountIn, address[] calldata path) view returns (uint[] memory)",
+    "function swapExactETHForTokensSupportingFeeOnTransferTokens(uint amountOutMin,address[] calldata path,address to,uint deadline) payable",
+    "function swapExactTokensForETHSupportingFeeOnTransferTokens(uint amountIn,uint amountOutMin,address[] calldata path,address to,uint deadline)"
+  ];
+  const ABI_PAIR = [
+    "function token0() view returns(address)",
+    "function token1() view returns(address)",
+    "function getReserves() view returns(uint112,uint112,uint32)"
+  ];
+  const ABI_LINK = [
+    "function latestRoundData() view returns (uint80,int256,uint256,uint256,uint80)",
+    "function decimals() view returns(uint8)"
+  ];
 
-    // Add to MetaMask
-    document.getElementById('btnAddMM')?.addEventListener('click', async ()=>{
-      try{
-        if(!window.ethereum){alert('MetaMask not detected');return}
-        const wasAdded = await window.ethereum.request({
-          method: 'wallet_watchAsset',
-          params: {
-            type: 'ERC20',
-            options: {
-              address: '0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41',
-              symbol: 'VNX',
-              decimals: 18,
-              image: 'https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx_logo_256.png'
-            }
-          }
-        });
-        if(!wasAdded){console.log('User rejected adding VNX')}
-      }catch(e){console.error(e)}
+  // ===== State =====
+  let provider, signer, account, token, staking, router, pair, link, dec=18, sym="VNX";
+  const toast = (msg, ok=true)=>{
+    const t = document.createElement('div'); t.className = `t ${ok? 'ok':'err'}`; t.textContent = msg; document.getElementById('toast').appendChild(t); setTimeout(()=>t.remove(), 4500);
+  }
+  const fmt = (x, d=dec)=>{
+    try{ return Number(ethers.formatUnits(x, d)).toLocaleString(undefined,{maximumFractionDigits:6}); }catch{ return "—"; }
+  }
+  const toWei = (s, d=dec)=> ethers.parseUnits((s||"0").toString().trim().replace(",","."), d);
+
+  // ===== UI helpers =====
+  document.querySelectorAll('[data-copy]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const sel = btn.getAttribute('data-copy');
+      const el = document.querySelector(sel); if(!el) return;
+      const txt = el.textContent.trim(); navigator.clipboard.writeText(txt).then(()=>{ const prev = btn.textContent; btn.textContent = 'Copié'; setTimeout(()=>btn.textContent = prev, 1200); });
     });
+  });
+
+  // Tabs swap
+  const tabBuy = document.getElementById('tabBuy');
+  const tabSell = document.getElementById('tabSell');
+  const panelBuy = document.getElementById('panelBuy');
+  const panelSell= document.getElementById('panelSell');
+  tabBuy.onclick=()=>{ tabBuy.classList.add('primary'); tabSell.classList.remove('primary'); panelBuy.style.display='block'; panelSell.style.display='none'; };
+  tabSell.onclick=()=>{ tabSell.classList.add('primary'); tabBuy.classList.remove('primary'); panelSell.style.display='block'; panelBuy.style.display='none'; };
+
+  // Connect wallet
+  document.getElementById('btnConnect').onclick = async()=>{
+    try{
+      if(!window.ethereum){ alert('Installez MetaMask/Rabby.'); return; }
+      provider = new ethers.BrowserProvider(window.ethereum);
+      const net = await provider.getNetwork();
+      document.getElementById('chainLabel').textContent = `chainId ${Number(net.chainId)}`;
+      if(Number(net.chainId)!==1){
+        try{ await provider.send('wallet_switchEthereumChain', [{ chainId:'0x1' }]); }catch(e){ toast('Veuillez passer sur Ethereum Mainnet', false); }
+      }
+      await provider.send('eth_requestAccounts',[]);
+      signer = await provider.getSigner();
+      account = await signer.getAddress();
+      document.getElementById('acct').textContent = account;
+      await initContracts();
+      await refreshAll();
+      startPoll();
+    }catch(e){ console.error(e); toast('Connexion refusée', false); }
+  }
+
+  // Add token to MetaMask
+  document.getElementById('btnAddMM').onclick = async()=>{
+    if(!window.ethereum){ alert('MetaMask non détecté'); return; }
+    try{
+      const ok = await window.ethereum.request({
+        method: 'wallet_watchAsset', params: { type:'ERC20', options:{ address: ADDR.TOKEN, symbol:'VNX', decimals:18, image:'https://crz76.github.io/vnx-assets/logo/vnx_logo_200.png' } }
+      }); if(ok) toast('VNX ajouté à MetaMask');
+    }catch(e){ console.error(e); }
+  }
+
+  async function initContracts(){
+    token  = new ethers.Contract(ADDR.TOKEN, ABI_ERC20, signer||provider);
+    staking= new ethers.Contract(ADDR.STAKE, ABI_STAKE_MIN, signer||provider);
+    router = new ethers.Contract(ADDR.ROUTER, ABI_ROUTER, signer||provider);
+    pair   = new ethers.Contract(ADDR.PAIR,   ABI_PAIR,   signer||provider);
+    link   = new ethers.Contract(ADDR.CHAINLINK_ETHUSD, ABI_LINK, signer||provider);
+    try{ dec = await token.decimals(); }catch{ dec = 18; }
+    try{ sym = await token.symbol(); }catch{ sym = 'VNX'; }
+  }
+
+  async function getEthUsd(){
+    try{ const [round,answer,,updated] = await link.latestRoundData(); const d = await link.decimals(); return Number(answer)/10**Number(d); }catch{ return null; }
+  }
+
+  async function getPrice(){
+    try{
+      const [t0,t1] = await Promise.all([pair.token0(), pair.token1()]);
+      const {0:r0,1:r1} = await pair.getReserves();
+      const [resVNX,resWETH] = (t0.toLowerCase()===ADDR.TOKEN.toLowerCase()) ? [r0,r1] : [r1,r0];
+      const priceEth = Number(resWETH)/Number(resVNX); // 1 VNX in WETH
+      const ethUsd = await getEthUsd();
+      const pxEthStr = `${priceEth.toFixed(8)} ETH`;
+      const pxUsdStr = ethUsd? ` • ${(priceEth*ethUsd).toFixed(6)} USD` : '';
+      document.getElementById('pxVNX').textContent = pxEthStr + pxUsdStr;
+      document.getElementById('reserves').textContent = `${fmt(resVNX)} / ${fmt(resWETH,18)}`;
+      // MCap
+      const ts = await token.totalSupply();
+      const mcapUsd = ethUsd? (Number(ethers.formatUnits(ts,dec))*priceEth*ethUsd) : null;
+      document.getElementById('mcap').textContent = mcapUsd? `$${mcapUsd.toLocaleString(undefined,{maximumFractionDigits:0})}` : '—';
+    }catch(e){ console.warn('price',e); }
+  }
+
+  async function refreshBalances(){
+    try{
+      if(!account) return;
+      const [bal, staked, pending] = await Promise.all([
+        token.balanceOf(account),
+        callStake('balanceOf',[account]).catch(()=>0n),
+        callStake('pending',[account]).catch(()=>0n)
+      ]);
+      document.getElementById('myVNX').textContent = fmt(bal);
+      document.getElementById('myStaked').textContent = fmt(staked);
+      document.getElementById('rewards').textContent = fmt(pending);
+    }catch(e){ console.warn(e); }
+  }
+
+  async function refreshAll(){
+    await initContracts();
+    await getPrice();
+    await refreshBalances();
+    estimateOutputs();
+  }
+
+  function startPoll(){ setInterval(()=>{ getPrice(); refreshBalances(); }, 15000); }
+
+  // ===== Staking autodetect helper =====
+  async function callStake(kind, args){
+    const list = ABI_STAKE_CANDIDATES[kind]||[];
+    for(const name of list){ try{ const fn = staking[name]; if(!fn) continue; const r = await staking[name](...(args||[])); if(r!==undefined) return r; }catch(e){} }
+    throw new Error('stake function not found: '+kind);
+  }
+
+  // ===== Swap helpers =====
+  function deadline(){ return Math.floor(Date.now()/1000)+600; }
+  function getSlippage(){ const v = parseFloat(document.getElementById('slip').value||'1'); return isFinite(v) && v>0? v : 1; }
+
+  async function estimateOutputs(){
+    try{
+      if(!provider) provider = new ethers.BrowserProvider(window.ethereum||window); // soft
+      const r = new ethers.Contract(ADDR.ROUTER, ABI_ROUTER, provider);
+      // Buy: ETH -> VNX
+      const ethIn = document.getElementById('ethIn').value.trim();
+      if(ethIn){
+        const path = [ADDR.WETH, ADDR.TOKEN];
+        try{
+          const amounts = await r.getAmountsOut(ethers.parseEther(ethIn), path);
+          document.getElementById('vnxOut').value = ethers.formatUnits(amounts[1], dec);
+        }catch{ document.getElementById('vnxOut').value = ''; }
+      }
+      // Sell: VNX -> ETH
+      const vnxIn = document.getElementById('vnxIn').value.trim();
+      if(vnxIn){
+        const path = [ADDR.TOKEN, ADDR.WETH];
+        try{
+          const amounts = await r.getAmountsOut(ethers.parseUnits(vnxIn,dec), path);
+          document.getElementById('ethOut').value = ethers.formatEther(amounts[1]);
+        }catch{ document.getElementById('ethOut').value = ''; }
+      }
+      // Send fee hint
+      const sa = document.getElementById('sendAmount').value.trim();
+      if(sa){
+        const amt = Number(sa);
+        if(!isNaN(amt) && amt>0){ const fee = Math.min(amt*0.002, 1); document.getElementById('sendFeeHint').textContent = `Frais estimé: ${fee.toFixed(6)} VNX (cap 1)`; }
+      }
+    }catch(e){ /* silent */ }
+  }
+
+  document.getElementById('ethIn').oninput = estimateOutputs;
+  document.getElementById('vnxIn').oninput = estimateOutputs;
+  document.getElementById('sendAmount').oninput = estimateOutputs;
+  document.getElementById('slip').oninput = estimateOutputs;
+
+  // Max buttons
+  document.getElementById('btnMaxEth').onclick = async()=>{
+    try{ const bal = await provider.getBalance(account); const gasBuf = ethers.parseEther('0.003'); const use = bal>gasBuf? bal-gasBuf : 0n; document.getElementById('ethIn').value = ethers.formatEther(use); estimateOutputs(); }catch{}
+  }
+  document.getElementById('btnMaxVnx').onclick = async()=>{
+    try{ const bal = await token.balanceOf(account); document.getElementById('vnxIn').value = ethers.formatUnits(bal,dec); estimateOutputs(); }catch{}
+  }
+  document.getElementById('btnMaxStake').onclick = async()=>{
+    try{ const bal = await token.balanceOf(account); document.getElementById('amtStake').value = ethers.formatUnits(bal,dec); }catch{}
+  }
+  document.getElementById('btnMaxSend').onclick = async()=>{
+    try{ const bal = await token.balanceOf(account); document.getElementById('sendAmount').value = ethers.formatUnits(bal,dec); estimateOutputs(); }catch{}
+  }
+
+  // Approvals
+  async function ensureAllowance(spender, amount){
+    const a = await token.allowance(account, spender);
+    if(a >= amount) return;
+    const tx = await token.approve(spender, amount);
+    toast('Approve envoyé…'); await tx.wait(); toast('Approve confirmé');
+  }
+
+  // BUY
+  document.getElementById('btnBuy').onclick = async()=>{
+    try{
+      if(!signer) throw new Error('Wallet non connecté');
+      const ethIn = document.getElementById('ethIn').value.trim(); if(!ethIn || Number(ethIn)<=0) throw new Error('Montant ETH invalide');
+      const slp = getSlippage();
+      const r = router.connect(signer);
+      const path = [ADDR.WETH, ADDR.TOKEN];
+      const amounts = await r.getAmountsOut(ethers.parseEther(ethIn), path).catch(()=>null);
+      let minOut = 0n; if(amounts){ const out = amounts[1]; minOut = out - (out * BigInt(Math.floor(slp*100)) / 10000n); }
+      const tx = await r.swapExactETHForTokensSupportingFeeOnTransferTokens(minOut, path, account, deadline(), { value: ethers.parseEther(ethIn) });
+      toast('Swap ETH→VNX envoyé…'); await tx.wait(); toast('Achat confirmé');
+      document.getElementById('ethIn').value=''; document.getElementById('vnxOut').value='';
+      await refreshBalances();
+    }catch(e){ console.error(e); toast(e.shortMessage||e.message||'Erreur swap', false); }
+  }
+
+  // APPROVE router for sell
+  document.getElementById('btnApprove').onclick = async()=>{
+    try{
+      const vnxIn = document.getElementById('vnxIn').value.trim(); if(!vnxIn || Number(vnxIn)<=0) throw new Error('Montant VNX invalide');
+      await ensureAllowance(ADDR.ROUTER, ethers.parseUnits(vnxIn,dec));
+    }catch(e){ toast(e.shortMessage||e.message||'Erreur approve', false); }
+  }
+
+  // SELL
+  document.getElementById('btnSell').onclick = async()=>{
+    try{
+      const vnxIn = document.getElementById('vnxIn').value.trim(); if(!vnxIn || Number(vnxIn)<=0) throw new Error('Montant VNX invalide');
+      const slp = getSlippage();
+      await ensureAllowance(ADDR.ROUTER, ethers.parseUnits(vnxIn,dec));
+      const r = router.connect(signer);
+      const path = [ADDR.TOKEN, ADDR.WETH];
+      const amounts = await r.getAmountsOut(ethers.parseUnits(vnxIn,dec), path).catch(()=>null);
+      let minOut = 0n; if(amounts){ const out = amounts[1]; minOut = out - (out * BigInt(Math.floor(slp*100)) / 10000n); }
+      const tx = await r.swapExactTokensForETHSupportingFeeOnTransferTokens(ethers.parseUnits(vnxIn,dec), minOut, path, account, deadline());
+      toast('Swap VNX→ETH envoyé…'); await tx.wait(); toast('Vente confirmée');
+      document.getElementById('vnxIn').value=''; document.getElementById('ethOut').value='';
+      await refreshBalances();
+    }catch(e){ console.error(e); toast(e.shortMessage||e.message||'Erreur swap', false); }
+  }
+
+  // STAKE FLOW
+  document.getElementById('btnApproveStake').onclick = async()=>{
+    try{
+      const amt = document.getElementById('amtStake').value.trim(); if(!amt || Number(amt)<=0) throw new Error('Montant invalide');
+      await ensureAllowance(ADDR.STAKE, ethers.parseUnits(amt,dec));
+    }catch(e){ toast(e.shortMessage||e.message||'Erreur approve stake', false); }
+  }
+  document.getElementById('btnDoStake').onclick = async()=>{
+    try{
+      const amt = document.getElementById('amtStake').value.trim(); if(!amt || Number(amt)<=0) throw new Error('Montant invalide');
+      const amount = ethers.parseUnits(amt,dec);
+      for(const n of ABI_STAKE_CANDIDATES.stake){ if(staking[n]){ const tx = await staking[n](amount); toast('Stake envoyé…'); await tx.wait(); toast('Stake confirmé'); await refreshBalances(); return; } }
+      throw new Error('Méthode stake non trouvée');
+    }catch(e){ toast(e.shortMessage||e.message||'Erreur stake', false); }
+  }
+  document.getElementById('btnWithdraw').onclick = async()=>{
+    try{
+      const amt = document.getElementById('amtStake').value.trim(); if(!amt || Number(amt)<=0) throw new Error('Montant invalide');
+      const amount = ethers.parseUnits(amt,dec);
+      for(const n of ABI_STAKE_CANDIDATES.withdraw){ if(staking[n]){ const tx = await staking[n](amount); toast('Withdraw envoyé…'); await tx.wait(); toast('Withdraw confirmé'); await refreshBalances(); return; } }
+      throw new Error('Méthode withdraw non trouvée');
+    }catch(e){ toast(e.shortMessage||e.message||'Erreur withdraw', false); }
+  }
+  document.getElementById('btnClaim').onclick = async()=>{
+    try{
+      for(const n of ABI_STAKE_CANDIDATES.claim){ if(staking[n]){ const tx = await staking[n](); toast('Claim envoyé…'); await tx.wait(); toast('Claim confirmé'); await refreshBalances(); return; } }
+      throw new Error('Méthode claim non trouvée');
+    }catch(e){ toast(e.shortMessage||e.message||'Erreur claim', false); }
+  }
+
+  // SEND
+  document.getElementById('btnSend').onclick = async()=>{
+    try{
+      const to = (document.getElementById('sendTo').value||'').trim();
+      const amt= (document.getElementById('sendAmount').value||'').trim();
+      if(!ethers.isAddress(to)) throw new Error('Adresse invalide');
+      if(!amt || Number(amt)<=0) throw new Error('Montant invalide');
+      const tx = await token.transfer(to, ethers.parseUnits(amt,dec));
+      toast('Transfert envoyé…'); await tx.wait(); toast('Transfert confirmé');
+      document.getElementById('sendAmount').value=''; await refreshBalances();
+    }catch(e){ toast(e.shortMessage||e.message||'Erreur transfert', false); }
+  }
+
+  // Init (prix en lecture seule sans connexion)
+  (async()=>{ try{ provider = new ethers.JsonRpcProvider('https://cloudflare-eth.com'); await initContracts(); await refreshAll(); }catch(e){} })();
   </script>
-</body>
-</html>
-
-  <footer>
-    <p>© 2025 VNX. This site is informational only and not investment advice.</p>
-  </footer>
 </body>
 </html>
