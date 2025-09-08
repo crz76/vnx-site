@@ -9,8 +9,8 @@
   <meta property="og:description" content="Acheter, échanger, staker et envoyer VNX (ERC‑20) sur Ethereum." />
   <meta property="og:image" content="https://crz76.github.io/vnx-assets/logo/vnx_logo_512.png" />
   <meta name="theme-color" content="#6F3AFF" />
-  <link rel="preload" as="image" href="https://crz76.github.io/vnx-assets/logo/vnx_logo_512.png" imagesrcset="https://crz76.github.io/vnx-assets/logo/vnx_logo_200.png 200w, https://crz76.github.io/vnx-assets/logo/vnx_logo_256.png 256w, https://crz76.github.io/vnx-assets/logo/vnx_logo_512.png 512w" fetchpriority="high">
-  <link rel="icon" href="https://crz76.github.io/vnx-assets/logo/vnx_logo_200.png" type="image/png" />
+  <link rel="preload" as="image" href="https://raw.githubusercontent.com/crz76/vnx-assets/refs/heads/main/vnx_logo_64.svg" fetchpriority="high">
+  <link rel="icon" href="https://raw.githubusercontent.com/crz76/vnx-assets/refs/heads/main/vnx_logo_64.svg" type="image/svg+xml" />
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.1/dist/ethers.min.js"></script>
   <style>
     :root{
@@ -79,7 +79,7 @@
   <div class="container">
     <header>
       <div class="logo-wrap">
-        <img class="logo" src="https://crz76.github.io/vnx-assets/logo/vnx_logo_512.png" srcset="https://crz76.github.io/vnx-assets/logo/vnx_logo_200.png 200w, https://crz76.github.io/vnx-assets/logo/vnx_logo_256.png 256w, https://crz76.github.io/vnx-assets/logo/vnx_logo_512.png 512w" alt="VNX logo" decoding="async" loading="eager" width="64" height="64" />
+        <img class="logo" src="https://raw.githubusercontent.com/crz76/vnx-assets/refs/heads/main/vnx_logo_64.svg" alt="VNX logo" decoding="async" loading="eager" width="64" height="64" />
       </div>
       <div>
         <h1 id="t_title">VNX — dApp officielle</h1>
@@ -161,7 +161,7 @@
         <div class="note" id="t_widgetnote">Si le widget ne s'affiche pas (protection navigateur), utilisez le bouton "Ouvrir Uniswap" ci‑dessous.</div>
         <div style="position:relative">
           <iframe class="swap" id="uniFrame" referrerpolicy="no-referrer" src="https://app.uniswap.org/#/swap?chain=mainnet&inputCurrency=ETH&outputCurrency=0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41"></iframe>
-          <div id="uniFallback" style="display:none;position:absolute;inset:0;display:grid;place-items:center">
+          <div id="uniFallback" style="display:none;margin-top:10px;">
             <a class="btn primary" target="_blank" href="https://app.uniswap.org/#/swap?chain=mainnet&inputCurrency=ETH&outputCurrency=0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41" id="t_openuni">Ouvrir Uniswap</a>
           </div>
         </div>
@@ -416,7 +416,9 @@
   // Uniswap iframe fallback detection
   const frame = document.getElementById('uniFrame');
   const fb = document.getElementById('uniFallback');
-  let frameOk = false; frame.addEventListener('load', ()=>{ frameOk = true; }); setTimeout(()=>{ if(!frameOk){ fb.style.display='grid'; frame.remove(); } }, 2000);
+  let frameOk = false;
+  frame.addEventListener('load', ()=>{ frameOk = true; });
+  setTimeout(()=>{ if(!frameOk){ fb.style.display='block'; if(frame) frame.style.display='none'; } }, 2000);
 
   // Connect wallet
   document.getElementById('btnConnect').onclick = async()=>{
