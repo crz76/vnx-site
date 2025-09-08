@@ -1,0 +1,19 @@
+<h1>VNX — Tokenomics & Distribution</h1>
+<ul>
+  <li><b>Chain:</b> Ethereum</li>
+  <li><b>Contract:</b> 0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41</li>
+  <li><b>Decimals:</b> 18</li>
+  <li><b>Max supply (fixed):</b> 400,000,000 VNX</li>
+  <li><b>Mint:</b> aucun mint futur (supply fixe). Les frais de transfert alimentent le staking et incluent un <i>burn</i> qui réduit l’offre en circulation.</li>
+  <li><b>Frais de transfert:</b> 0.20% (cap 1 VNX/tx) → 70% stakers / 20% treasury / 10% burn</li>
+  <li><b>Contrats:</b> 
+    <ul>
+      <li>VNXToken: 0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41</li>
+      <li>FeeCollector (trésorerie): 0xa3B06e9bFAE1c0cf97fbE45D38f4CB7AF79204Fa</li>
+      <li>Staking: 0x75b3812a532A3E9d3487AFAae28FF6e5383EC2f8</li>
+      <li>Uniswap V2 Pair (VNX/WETH): 0x5De3F5d74e692e7Ed2d999A17b127910ff462845</li>
+    </ul>
+  </li>
+  <li><b>Distribution initiale:</b> déploiement → allocation au déployeur (trésorerie) puis mise en liquidité et distribution progressive via marché + staking.</li>
+  <li><b>Politique de burn:</b> 10% des frais de transfert sont brûlés (événement Transfer vers l’adresse nulle) ce qui diminue <code>totalSupply()</code>.</li>
+</ul>
