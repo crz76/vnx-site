@@ -53,7 +53,7 @@
     .small{font-size:13px}
     .accent{background:linear-gradient(90deg,var(--accent2),var(--accent1));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
 
-    /* Assure les boutons au-dessus de l'iframe Uniswap */
+    /* Assurer les boutons au-dessus de l'iframe Uniswap */
     header,.bar,#walletBar,#btnConnect,#btnChooseWallet{position:relative;z-index:50}
     .uniswap-embed,.uniswap-widget,#uniFrame,#uniFallback{position:relative;z-index:1}
 
@@ -506,42 +506,87 @@
     document.getElementById("quoteSell").textContent="Tx: "+tx.hash; await tx.wait();
   });
 
-  /*************** Staking ***************/
-  const STAKING_ABI=[
-    "function stake(uint256) external","function withdraw(uint256) external",
-    "function getReward() external","function claim() external",
-    "function earned(address) view returns(uint256)","function balanceOf(address) view returns(uint256)"
+  /*************** Staking (patch claim robuste) ***************/
+  const STAKING_ADDR = ADDR.STAKING;
+  const ABI_BAL_EARNED = [
+    "function balanceOf(address) view returns (uint256)",
+    "function earned(address) view returns (uint256)"
   ];
+  const CLAIM_CANDIDATES = [
+    { name: "getReward",    abi: ["function getReward()"] },
+    { name: "claim",        abi: ["function claim()"] },
+    { name: "harvest",      abi: ["function harvest()"] },
+    { name: "claimRewards", abi: ["function claimRewards()"] },
+    { name: "getRewards",   abi: ["function getRewards()"] }
+  ];
+  const STAKING_ABI_WRITE = [
+    "function stake(uint256) external",
+    "function withdraw(uint256) external"
+  ];
+  const elStakeInfo = document.getElementById("stakeInfo");
+  const elClaimBtn  = document.getElementById("btnClaim");
+
+  function explainError(e){ const raw=e?.info?.error?.message||e?.shortMessage||e?.message||String(e); return raw.replace(/execution reverted:?/i,'').trim(); }
+
   async function updateStakeInfo(){
     try{
-      if(!provider||!account){ document.getElementById("stakeInfo").textContent="—"; return; }
-      const staking=new ethersjs.Contract(ADDR.STAKING,STAKING_ABI,provider);
-      const [staked,earned]=await Promise.all([staking.balanceOf(account).catch(()=>0n),staking.earned(account).catch(()=>0n)]);
-      document.getElementById("stakeInfo").textContent=`Staked: ${Number(ethersjs.formatUnits(staked,18)).toFixed(4)} VNX • Earned: ${Number(ethersjs.formatUnits(earned,18)).toFixed(4)} VNX`;
-    }catch{ document.getElementById("stakeInfo").textContent="—"; }
+      if(!provider||!account){ elStakeInfo.textContent="—"; return; }
+      const stakingRead=new ethersjs.Contract(STAKING_ADDR, ABI_BAL_EARNED, provider);
+      const [staked,earned]=await Promise.all([
+        stakingRead.balanceOf(account).catch(()=>0n),
+        stakingRead.earned(account).catch(()=>0n),
+      ]);
+      const stF=Number(ethersjs.formatUnits(staked,18)).toFixed(4);
+      const erF=Number(ethersjs.formatUnits(earned,18)).toFixed(4);
+      elStakeInfo.textContent=`Staked: ${stF} VNX • Earned: ${erF} VNX`;
+      elClaimBtn.disabled=(earned===0n);
+      elClaimBtn.title=(earned===0n)?"Aucune récompense à récupérer":"";
+    }catch(e){ elStakeInfo.textContent="—"; console.warn("updateStakeInfo error:",e); }
   }
+
+  async function claimRewardsRobust(){
+    if(!signer) return alert("Connecte ton wallet d'abord.");
+    const addr=await signer.getAddress();
+
+    try{
+      const stakingRead=new ethersjs.Contract(STAKING_ADDR, ABI_BAL_EARNED, provider);
+      const earned=await stakingRead.earned(addr).catch(()=>0n);
+      if(earned===0n){ alert("Aucune récompense disponible à claim."); return; }
+    }catch(_){ /* si earned() n'existe pas, on tentera quand même */ }
+
+    let lastErr=null;
+    for(const c of CLAIM_CANDIDATES){
+      try{
+        const stakingW=new ethersjs.Contract(STAKING_ADDR, c.abi, signer);
+        if (stakingW[c.name]?.estimateGas) { await stakingW[c.name].estimateGas(); }
+        const tx=await stakingW[c.name]();
+        elStakeInfo.textContent="Claim tx: "+tx.hash;
+        await tx.wait();
+        await updateStakeInfo();
+        alert("Récompenses réclamées ✅");
+        return;
+      }catch(e){ lastErr=e; console.debug(`Claim via ${c.name} a échoué, on essaie la suivante…`, e); }
+    }
+    alert("Échec du claim.\nCauses possibles :\n- Méthode non standard\n- Pas de récompenses\n- Réseau / Gas / Nonce\n\nDétails : "+explainError(lastErr));
+  }
+
   document.getElementById("btnApproveStake")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
-    const erc=new ethersjs.Contract(ADDR.TOKEN,ERC20_ABI,signer);
+    const erc=new ethersjs.Contract(ADDR.TOKEN,["function approve(address,uint256) returns(bool)"],signer);
     const tx=await erc.approve(ADDR.STAKING,ethersjs.MaxUint256); await tx.wait(); await updateStakeInfo(); alert("Approve OK");
   });
   document.getElementById("btnStake")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
     const amt=Number(document.getElementById("stakeAmt").value||"0"); if(amt<=0) return;
-    const staking=new ethersjs.Contract(ADDR.STAKING,STAKING_ABI,signer);
-    const tx=await staking.stake(ethersjs.parseUnits(String(amt),18)); await tx.wait(); await updateStakeInfo();
+    const stakingW=new ethersjs.Contract(STAKING_ADDR, STAKING_ABI_WRITE, signer);
+    const tx=await stakingW.stake(ethersjs.parseUnits(String(amt),18)); await tx.wait(); await updateStakeInfo();
   });
-  document.getElementById("btnClaim")?.addEventListener("click", async()=>{
-    if(!signer) return alert("Connecte ton wallet d'abord.");
-    const staking=new ethersjs.Contract(ADDR.STAKING,STAKING_ABI,signer);
-    let tx; try{ tx=await staking.getReward(); }catch{ tx=await staking.claim(); }
-    await tx.wait(); await updateStakeInfo();
-  });
+  document.getElementById("btnClaim")?.addEventListener("click", claimRewardsRobust);
   document.getElementById("btnWithdraw")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
     const amt=Number(document.getElementById("stakeAmt").value||"0"); if(amt<=0) return;
-    const staking=new ethersjs.Contract(ADDR.STAKING,STAKING_ABI,signer);
-    const tx=await staking.withdraw(ethersjs.parseUnits(String(amt),18)); await tx.wait(); await updateStakeInfo();
+    const stakingW=new ethersjs.Contract(STAKING_ADDR, STAKING_ABI_WRITE, signer);
+    const tx=await stakingW.withdraw(ethersjs.parseUnits(String(amt),18)); await tx.wait(); await updateStakeInfo();
   });
   setInterval(updateStakeInfo,8000);
 
@@ -553,20 +598,20 @@
   document.getElementById("btnCheckAllowance")?.addEventListener("click", async()=>{
     if(!provider||!account) return alert("Connecte ton wallet d'abord.");
     const spender=document.getElementById("inpSpender").value.trim(); if(!spender) return;
-    const erc=new ethersjs.Contract(ADDR.TOKEN,ERC20_ABI,provider);
+    const erc=new ethersjs.Contract(ADDR.TOKEN,["function decimals() view returns(uint8)","function allowance(address,address) view returns(uint256)"],provider);
     const [dec,allow]=await Promise.all([erc.decimals().catch(()=>18),erc.allowance(account,spender)]);
     allowanceOut.textContent=`Allowance: ${Number(ethersjs.formatUnits(allow,dec)).toFixed(6)} VNX`;
   });
   document.getElementById("btnRevoke")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
     const spender=document.getElementById("inpSpender").value.trim(); if(!spender) return;
-    const erc=new ethersjs.Contract(ADDR.TOKEN,ERC20_ABI,signer);
+    const erc=new ethersjs.Contract(ADDR.TOKEN,["function approve(address,uint256) returns(bool)"],signer);
     const tx=await erc.approve(spender,0); allowanceOut.textContent="Revoke tx: "+tx.hash; await tx.wait(); document.getElementById("btnCheckAllowance").click();
   });
   document.getElementById("btnMax")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
     const spender=document.getElementById("inpSpender").value.trim(); if(!spender) return;
-    const erc=new ethersjs.Contract(ADDR.TOKEN,ERC20_ABI,signer);
+    const erc=new ethersjs.Contract(ADDR.TOKEN,["function approve(address,uint256) returns(bool)"],signer);
     const tx=await erc.approve(spender,ethersjs.MaxUint256); allowanceOut.textContent="Approve tx: "+tx.hash; await tx.wait(); document.getElementById("btnCheckAllowance").click();
   });
   </script>
