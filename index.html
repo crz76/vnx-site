@@ -13,24 +13,18 @@
   <link rel="preload" as="image" href="https://raw.githubusercontent.com/crz76/vnx-assets/refs/heads/main/vnx_logo_64.svg" fetchpriority="high">
   <style>
     :root{
-      --bg: #0b1020;
-      --card: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.12);
-      --text: #eef2ff;
-      --muted: #b8c1ff;
-      --accent1: #6F3AFF;
-      --accent2: #408CFF;
-      --shadow: 0 10px 30px rgba(0,0,0,0.35);
-      --radius: 16px;
+      --bg:#0b1020; --card:rgba(255,255,255,.06); --border:rgba(255,255,255,.12);
+      --text:#eef2ff; --muted:#b8c1ff; --accent1:#6F3AFF; --accent2:#408CFF;
+      --shadow:0 10px 30px rgba(0,0,0,.35); --radius:16px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; color:var(--text);
+      margin:0;color:var(--text);
       background:
-        radial-gradient(1200px 600px at 20% -10%, rgba(64,140,255,0.25), transparent 60%),
-        radial-gradient(900px 500px at 100% 0%, rgba(111,58,255,0.28), transparent 60%), var(--bg);
-      font: 16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+        radial-gradient(1200px 600px at 20% -10%, rgba(64,140,255,.25), transparent 60%),
+        radial-gradient(900px 500px at 100% 0%, rgba(111,58,255,.28), transparent 60%), var(--bg);
+      font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
     }
     a{color:#cfe0ff}
     .container{max-width:1080px;margin:0 auto;padding:24px}
@@ -41,37 +35,35 @@
     .bar{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 24px}
     .btn{
       appearance:none;border:1px solid var(--border);background:var(--card);color:var(--text);
-      padding:10px 14px;border-radius:12px;cursor:pointer;transition:.2s;backdrop-filter: blur(6px);
-      box-shadow:var(--shadow); text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+      padding:10px 14px;border-radius:12px;cursor:pointer;transition:.2s;backdrop-filter:blur(6px);
+      box-shadow:var(--shadow);text-decoration:none;display:inline-flex;align-items:center;gap:8px;
     }
-    .btn:hover{border-color:#9aa3ff;background:rgba(255,255,255,0.1)}
-    .grid{display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:16px}
+    .btn:hover{border-color:#9aa3ff;background:rgba(255,255,255,.1)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
     @media (max-width:780px){.grid{grid-template-columns:1fr}}
-    .card{background:var(--card); border:1px solid var(--border); padding:18px; border-radius:var(--radius); backdrop-filter: blur(6px); box-shadow: var(--shadow)}
+    .card{background:var(--card);border:1px solid var(--border);padding:18px;border-radius:var(--radius);backdrop-filter:blur(6px);box-shadow:var(--shadow)}
     .card h3{margin:0 0 8px;font-size:18px}
     .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    code.addr{user-select:all; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:14px; color:#d7ddff}
-    .pill{font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,0.06)}
+    code.addr{user-select:all;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:14px;color:#d7ddff}
+    .pill{font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.06)}
     footer{margin:28px 0 16px;color:#9fb0ff80;font-size:13px}
-    .hero{
-      position:relative; border-radius:20px; overflow:hidden; padding:18px; border:1px solid var(--border);
-      background: linear-gradient(135deg, rgba(111,58,255,0.22), rgba(64,140,255,0.18));
-      box-shadow:var(--shadow);
-    }
-    .hero h2{margin:0 0 8px; font-size:22px}
-    .hero p{margin:0}
-    .accent{background: linear-gradient(90deg, var(--accent2), var(--accent1)); -webkit-background-clip:text; background-clip:text; color:transparent; font-weight:700}
+    .hero{position:relative;border-radius:20px;overflow:hidden;padding:18px;border:1px solid var(--border);
+      background:linear-gradient(135deg,rgba(111,58,255,.22),rgba(64,140,255,.18));box-shadow:var(--shadow)}
+    .hero h2{margin:0 0 8px;font-size:22px}
     .small{font-size:13px}
-    /* ensure wallet buttons stay above embeds */
-    header, .bar, #btnConnect { position: relative; z-index: 50; }
-    .uniswap-embed, .uniswap-widget, #uniFrame, #uniFallback { position: relative; z-index: 1; }
-    /* inputs */
-    input, select{background:rgba(255,255,255,0.06); border:1px solid var(--border); color:var(--text);
-      border-radius:10px; padding:8px 10px; min-width:0;}
+    .accent{background:linear-gradient(90deg,var(--accent2),var(--accent1));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+
+    /* Assure les boutons au-dessus de l'iframe Uniswap */
+    header,.bar,#walletBar,#btnConnect,#btnChooseWallet{position:relative;z-index:50}
+    .uniswap-embed,.uniswap-widget,#uniFrame,#uniFallback{position:relative;z-index:1}
+
+    input,select{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text);
+      border-radius:10px;padding:8px 10px;min-width:0}
     label{font-size:13px;color:#c9d3ff}
-    .col{display:flex;flex-direction:column;gap:8px}
-    .row-between{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-    .hl{color:#a3b8ff}
+
+    /* Modal simple */
+    #walletModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;align-items:center;justify-content:center}
+    #walletModal .box{background:rgba(16,22,42,.98);border:1px solid rgba(255,255,255,.12);border-radius:16px;box-shadow:var(--shadow);padding:18px;max-width:420px;width:92%;color:var(--text)}
   </style>
 </head>
 <body>
@@ -81,9 +73,10 @@
       <div style="flex:1">
         <h1>VNX — <span data-i18n="title">dApp officielle</span></h1>
         <div class="muted small">ERC-20 • 0,20% cap 1 VNX → 70% Stakers / 20% Treasury / 10% Burn</div>
-        <div class="bar">
+        <div class="bar" id="walletBar">
           <a class="btn" href="#trade" data-i18n="buyTrade">Acheter / Échanger</a>
           <button class="btn" id="btnConnect">Connect Wallet</button>
+          <button class="btn" id="btnChooseWallet" style="display:none">Choose Wallet</button>
           <span class="pill" id="walletStatus" style="display:none"></span>
           <button class="btn" id="btnAddMM" data-i18n="addMM">Ajouter VNX à MetaMask</button>
           <button class="btn" id="btnLang">EN</button>
@@ -91,6 +84,18 @@
         </div>
       </div>
     </header>
+
+    <!-- Wallet select modal -->
+    <div id="walletModal">
+      <div class="box">
+        <h3 style="margin:0 0 8px;font-size:18px">Select a Wallet</h3>
+        <p class="small" style="color:#b8c1ff;margin:0 0 12px">Multiple wallets detected via EIP-6963.</p>
+        <div id="walletList" class="col" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div class="bar" style="margin-top:12px;justify-content:flex-end">
+          <button class="btn" id="btnCloseModal">Close</button>
+        </div>
+      </div>
+    </div>
 
     <section class="hero">
       <h2 data-i18n="addresses">Adresses</h2>
@@ -161,7 +166,7 @@
             <div class="col">
               <label>Montant ETH</label>
               <input id="ethIn" type="number" min="0" step="0.0001" placeholder="0.1">
-              <div class="row-between">
+              <div class="row" style="gap:16px">
                 <div>
                   <label>Slippage</label>
                   <input id="slipBuy" type="number" min="0" step="0.1" value="1"> %
@@ -183,7 +188,7 @@
             <div class="col">
               <label>Montant VNX</label>
               <input id="vnxIn" type="number" min="0" step="0.01" placeholder="100">
-              <div class="row-between">
+              <div class="row" style="gap:16px">
                 <div>
                   <label>Slippage</label>
                   <input id="slipSell" type="number" min="0" step="0.1" value="1"> %
@@ -253,7 +258,7 @@
           <ul class="small">
             <li><b>Ajouter la Tokenlist</b> : bouton “Ajouter la Tokenlist à Uniswap” (copie l’URL et ouvre Uniswap).</li>
             <li><b>Ajouter VNX dans MetaMask</b> : bouton “Ajouter VNX à MetaMask”.</li>
-            <li><b>Ajout manuel</b> : MetaMask → Import tokens → Adresse = <span class="hl">0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41</span> • Symbol = <span class="hl">VNX</span> • Decimals = <span class="hl">18</span>.</li>
+            <li><b>Ajout manuel</b> : MetaMask → Import tokens → Adresse = <code>0x27BB16f90E4B007c51430d1c76152Ad6B5E8fD41</code> • Symbol = <b>VNX</b> • Decimals = <b>18</b>.</li>
           </ul>
           <div class="bar">
             <button class="btn" id="btnCopyList">Copier l’URL de la Tokenlist</button>
@@ -290,70 +295,42 @@
   };
   const TOKENLIST_URL = "https://raw.githubusercontent.com/crz76/vnx-assets/main/vnx-tokenlist.json";
 
-  /*************** I18N (FR/EN) ***************/
+  /*************** I18N ***************/
   const I18N = {
-    fr: {
-      title:"dApp officielle",
-      buyTrade:"Acheter / Échanger",
-      useUniswap:"Utilisez Uniswap ou le swap natif (backup).",
-      addresses:"Adresses",
-      copy:"Copier",
-      marketsTitle:"Marchés",
-      widgetBlocked:"Si le widget ne s'affiche pas (protection navigateur), utilisez le bouton “Ouvrir Uniswap” ci-dessous.",
-      openUni:"Ouvrir Uniswap",
-      addList:"Ajouter la Tokenlist à Uniswap",
-      addMM:"Ajouter VNX à MetaMask",
-    },
-    en: {
-      title:"Official dApp",
-      buyTrade:"Buy / Trade",
-      useUniswap:"Use Uniswap or the native backup swap.",
-      addresses:"Addresses",
-      copy:"Copy",
-      marketsTitle:"Markets",
-      widgetBlocked:"If the widget is blocked by your browser, use the “Open Uniswap” button below.",
-      openUni:"Open Uniswap",
-      addList:"Add Tokenlist to Uniswap",
-      addMM:"Add VNX to MetaMask",
-    }
-  }
+    fr:{title:"dApp officielle",buyTrade:"Acheter / Échanger",useUniswap:"Utilisez Uniswap ou le swap natif (backup).",
+        addresses:"Adresses",copy:"Copier",marketsTitle:"Marchés",
+        widgetBlocked:"Si le widget ne s'affiche pas (protection navigateur), utilisez le bouton “Ouvrir Uniswap” ci-dessous.",
+        openUni:"Ouvrir Uniswap",addList:"Ajouter la Tokenlist à Uniswap",addMM:"Ajouter VNX à MetaMask"},
+    en:{title:"Official dApp",buyTrade:"Buy / Trade",useUniswap:"Use Uniswap or the native backup swap.",
+        addresses:"Addresses",copy:"Copy",marketsTitle:"Markets",
+        widgetBlocked:"If the widget is blocked by your browser, use the “Open Uniswap” button below.",
+        openUni:"Open Uniswap",addList:"Add Tokenlist to Uniswap",addMM:"Add VNX to MetaMask"}
+  };
   function applyI18n(lang){
     document.querySelectorAll("[data-i18n]").forEach(el=>{
-      const k = el.getAttribute("data-i18n");
-      el.textContent = I18N[lang][k] || el.textContent;
+      const k=el.getAttribute("data-i18n"); if(I18N[lang][k]) el.textContent=I18N[lang][k];
     });
-    document.getElementById("btnLang").textContent = (lang==="fr"?"EN":"FR");
-    document.documentElement.lang = lang;
-    localStorage.setItem("vnx_lang", lang);
+    document.getElementById("btnLang").textContent=(lang==="fr"?"EN":"FR");
+    document.documentElement.lang=lang; localStorage.setItem("vnx_lang",lang);
   }
-  (function initLang(){
-    const saved = localStorage.getItem("vnx_lang") || "fr";
-    applyI18n(saved);
-    document.getElementById("btnLang").addEventListener("click",()=>{
-      applyI18n(document.documentElement.lang==="fr"?"en":"fr");
-    });
-  })();
+  (function initLang(){ const s=localStorage.getItem("vnx_lang")||"fr"; applyI18n(s);
+    document.getElementById("btnLang").addEventListener("click",()=>applyI18n(document.documentElement.lang==="fr"?"en":"fr")); })();
 
-  /*************** Copy buttons & misc ***************/
+  /*************** Copy helpers & tokenlist ***************/
   document.querySelectorAll("[data-copy]").forEach(btn=>{
     btn.addEventListener("click", ()=>{
-      const el = document.querySelector(btn.getAttribute("data-copy"));
-      if(!el) return;
+      const el=document.querySelector(btn.getAttribute("data-copy")); if(!el) return;
       navigator.clipboard.writeText(el.textContent.trim()).then(()=>{
-        const old = btn.textContent; btn.textContent = (document.documentElement.lang==="fr"?"Copié":"Copied");
+        const old=btn.textContent; btn.textContent=(document.documentElement.lang==="fr"?"Copié":"Copied");
         setTimeout(()=>btn.textContent=old,1200);
       });
     });
   });
-
-  const listUrl = TOKENLIST_URL;
-  document.getElementById("btnCopyList")?.addEventListener("click", ()=>{
-    navigator.clipboard.writeText(listUrl).then(()=>{
-      alert("Tokenlist URL copiée : " + listUrl);
-    });
+  document.getElementById("btnCopyList")?.addEventListener("click",()=>{
+    navigator.clipboard.writeText(TOKENLIST_URL).then(()=>alert("Tokenlist URL copiée : "+TOKENLIST_URL));
   });
-  document.getElementById("btnAddList")?.addEventListener("click", ()=>{
-    navigator.clipboard.writeText(listUrl).then(()=>{
+  document.getElementById("btnAddList")?.addEventListener("click",()=>{
+    navigator.clipboard.writeText(TOKENLIST_URL).then(()=>{
       window.open("https://app.uniswap.org/#/tokens/ethereum","_blank");
       alert("URL de la tokenlist copiée. Dans Uniswap : ⚙ > Token Lists > Add list > collez l’URL.");
     });
@@ -361,268 +338,236 @@
 
   /*************** Uniswap embed fallback ***************/
   (function setupUni(){
-    const frame = document.getElementById('uniFrame');
-    const fb = document.getElementById('uniFallback');
-    if(!frame || !fb) return;
-    let ok=false;
-    frame.addEventListener('load', ()=>{ ok=true; });
+    const frame=document.getElementById('uniFrame'); const fb=document.getElementById('uniFallback'); if(!frame||!fb) return;
+    let ok=false; frame.addEventListener('load',()=>{ok=true;});
     setTimeout(()=>{ if(!ok){ fb.style.display='block'; frame.style.display='none'; } }, 2000);
   })();
 
-  /*************** MetaMask connect (EIP-1193) ***************/
-  const $ = (s)=>document.querySelector(s);
-  const btnConnect = $("#btnConnect");
-  const pill = $("#walletStatus");
+  /*************** MULTI-WALLET (EIP-6963) ***************/
+  const $ = s=>document.querySelector(s);
+  const btnConnect = $("#btnConnect"), btnChoose=$("#btnChooseWallet"), pill=$("#walletStatus");
+  const modal=$("#walletModal"), listEl=$("#walletList"), closeBtn=$("#btnCloseModal");
 
-  function getProvider(){
-    if(window.ethereum?.providers?.length){
-      return window.ethereum.providers.find(p=>p.isMetaMask) || window.ethereum.providers[0];
-    }
-    return window.ethereum || null;
-  }
-  async function ensureMainnet(eth){
-    const cid = await eth.request({method:"eth_chainId"});
-    if(cid==="0x1") return;
-    try{
-      await eth.request({method:"wallet_switchEthereumChain", params:[{chainId:"0x1"}]});
-    }catch(e){
-      if(e.code===4902){
-        await eth.request({
-          method:"wallet_addEthereumChain",
-          params:[{chainId:"0x1", chainName:"Ethereum Mainnet",
-                   nativeCurrency:{name:"Ether",symbol:"ETH",decimals:18},
-                   rpcUrls:["https://cloudflare-eth.com"], blockExplorerUrls:["https://etherscan.io"]}]
-        });
-      } else { throw e; }
-    }
-  }
+  let PROVIDERS=[], chosenProvider=null, ethersjs=window.ethers, provider=null, signer=null, account=null;
+
   function setBtn(t,dis=false){ if(btnConnect){ btnConnect.textContent=t; btnConnect.disabled=dis; } }
   function setPill(t){ if(!pill)return; if(!t){pill.style.display="none";return;} pill.textContent=t; pill.style.display="inline-block"; }
+  function openModal(){ modal.style.display="flex"; }
+  function closeModal(){ modal.style.display="none"; }
+  closeBtn?.addEventListener("click", closeModal);
 
-  let provider=null, signer=null, ethersjs=window.ethers, account=null;
-
+  function renderProviderList(){
+    listEl.innerHTML=""; PROVIDERS.forEach(p=>{
+      const b=document.createElement("button"); b.className="btn";
+      const name=p.info?.name || (p.provider?.isMetaMask?"MetaMask":"Wallet");
+      b.textContent=name+(p.provider?.isMetaMask?" (MetaMask)":"");
+      b.onclick=async()=>{ chosenProvider=p.provider; closeModal(); await doConnect(); };
+      listEl.appendChild(b);
+    });
+  }
+  function registerProvider(e){
+    const {provider,info}=e.detail;
+    if(PROVIDERS.find(x=>x.provider===provider)) return;
+    PROVIDERS.push({id:info?.rdns||info?.uuid||String(PROVIDERS.length+1),info,provider});
+  }
+  async function discoverProviders(timeoutMs=800){
+    PROVIDERS=[];
+    window.addEventListener("eip6963:announceProvider", registerProvider);
+    window.dispatchEvent(new Event("eip6963:requestProvider"));
+    if(window.ethereum?.providers?.length){
+      window.ethereum.providers.forEach(p=>registerProvider({detail:{provider:p,info:{name:p.isMetaMask?"MetaMask":"Wallet"}}}));
+    }else if(window.ethereum){
+      registerProvider({detail:{provider:window.ethereum,info:{name:window.ethereum.isMetaMask?"MetaMask":"Wallet"}}});
+    }
+    await new Promise(r=>setTimeout(r,timeoutMs));
+    window.removeEventListener("eip6963:announceProvider", registerProvider);
+    if(PROVIDERS.length===0) return null;
+    const mm=PROVIDERS.find(p=>p.provider?.isMetaMask); if(mm) return mm.provider;
+    return PROVIDERS[0].provider;
+  }
+  async function ensureMainnet(eth){
+    const cid=await eth.request({method:"eth_chainId"}); if(cid==="0x1") return;
+    try{ await eth.request({method:"wallet_switchEthereumChain",params:[{chainId:"0x1"}]}); }
+    catch(e){ if(e.code===4902){
+      await eth.request({method:"wallet_addEthereumChain",params:[{chainId:"0x1",chainName:"Ethereum Mainnet",
+        nativeCurrency:{name:"Ether",symbol:"ETH",decimals:18},rpcUrls:["https://cloudflare-eth.com"],blockExplorerUrls:["https://etherscan.io"]}]});
+    } else { throw e; } }
+  }
   async function refreshBalances(){
     try{
-      const net = await provider.getNetwork();
-      const ethBal = await provider.getBalance(account);
-      const ethF = Number(ethersjs.formatEther(ethBal)).toFixed(4);
-      const erc = new ethersjs.Contract(ADDR.TOKEN,
+      if(!provider||!account) return;
+      const ethBal=await provider.getBalance(account);
+      const ethF=Number(ethersjs.formatEther(ethBal)).toFixed(4);
+      const erc=new ethersjs.Contract(ADDR.TOKEN,
         ["function decimals() view returns(uint8)","function symbol() view returns(string)","function balanceOf(address) view returns(uint256)"],
         provider);
-      const [dec,sym,bal] = await Promise.all([
-        erc.decimals().catch(()=>18),
-        erc.symbol().catch(()=> "VNX"),
-        erc.balanceOf(account)
-      ]);
-      const vnxF = Number(ethersjs.formatUnits(bal, dec)).toFixed(4);
+      const [dec,sym,bal]=await Promise.all([erc.decimals().catch(()=>18),erc.symbol().catch(()=> "VNX"),erc.balanceOf(account)]);
+      const vnxF=Number(ethersjs.formatUnits(bal,dec)).toFixed(4);
       setPill(`${account.substring(0,6)}…${account.slice(-4)} • ${ethF} ETH • ${vnxF} ${sym}`);
     }catch(e){ console.warn(e); }
   }
-
-  async function connect(){
-    const eth = getProvider();
-    if(!eth){ alert("MetaMask non détecté. Installe-le puis recharge la page."); window.open("https://metamask.io/download/","_blank"); return; }
-    setBtn("Connecting…", true);
+  async function doConnect(){
+    const eth=chosenProvider||await discoverProviders();
+    if(!eth){ setBtn("Install MetaMask"); alert("Aucun wallet détecté. Installe MetaMask (metamask.io) ou active ton extension, puis recharge."); window.open("https://metamask.io/download/","_blank"); return; }
+    setBtn("Connecting…",true);
     try{
+      if(PROVIDERS.length>1) btnChoose.style.display="inline-flex";
       await ensureMainnet(eth);
-      const accs = await eth.request({method:"eth_requestAccounts"});
-      if(!accs || !accs[0]){ setBtn("Connect Wallet"); return; }
-      account = accs[0];
-      provider = new ethersjs.BrowserProvider(eth);
-      signer = await provider.getSigner();
-      setBtn("Connected");
-      await refreshBalances();
-      // listeners
-      eth.on?.("accountsChanged", async (a)=>{ if(a?.[0]){account=a[0]; await refreshBalances();} else { setBtn("Connect Wallet"); setPill(""); }});
-      eth.on?.("chainChanged", async ()=>{ await refreshBalances(); });
+      const accs=await eth.request({method:"eth_requestAccounts"}); if(!accs||!accs[0]){ setBtn("Connect Wallet"); return; }
+      account=accs[0]; provider=new ethersjs.BrowserProvider(eth); signer=await provider.getSigner();
+      setBtn("Connected"); await refreshBalances();
+      eth.on?.("accountsChanged",async a=>{ if(a?.[0]){account=a[0]; await refreshBalances();} else { setBtn("Connect Wallet"); setPill(""); }});
+      eth.on?.("chainChanged",async()=>{ await refreshBalances(); });
     }catch(e){
       if(e.code===4001){ setBtn("Connect Wallet"); return; }
-      console.error(e); alert("Connexion impossible : "+(e?.message||e));
-      setBtn("Connect Wallet");
-    } finally { btnConnect.disabled=false; }
+      console.error(e); alert("Connexion impossible : "+(e?.message||e)); setBtn("Connect Wallet");
+    }finally{ btnConnect.disabled=false; }
   }
-  btnConnect?.addEventListener("click", connect);
-  (async ()=>{ // auto state
-    const eth = getProvider(); if(!eth) return;
-    const accs = await eth.request({method:"eth_accounts"}).catch(()=>[]);
-    if(accs?.[0]){ account=accs[0]; provider=new ethersjs.BrowserProvider(eth); signer=await provider.getSigner(); setBtn("Connected"); refreshBalances(); }
+  btnChoose?.addEventListener("click", async()=>{
+    await discoverProviders(); if(PROVIDERS.length<=1){ alert("Un seul wallet détecté. MetaMask n’est peut-être pas activé ?"); return; }
+    renderProviderList(); openModal();
+  });
+  btnConnect?.addEventListener("click", doConnect);
+  (async()=>{ await discoverProviders();
+    const eth=chosenProvider||(PROVIDERS.find(p=>p.provider?.isMetaMask)?.provider)||(PROVIDERS[0]?.provider);
+    if(!eth) return;
+    const accs=await eth.request({method:"eth_accounts"}).catch(()=>[]); if(accs?.[0]){ account=accs[0]; provider=new ethersjs.BrowserProvider(eth); signer=await provider.getSigner(); setBtn("Connected"); setPill(`${account.substring(0,6)}…${account.slice(-4)}`); if(PROVIDERS.length>1) btnChoose.style.display="inline-flex"; refreshBalances(); }
   })();
 
   /*************** Add VNX to MetaMask ***************/
   document.getElementById('btnAddMM')?.addEventListener('click', async ()=>{
     try{
-      const eth = getProvider(); if(!eth){alert('MetaMask non détecté');return}
-      await eth.request({
-        method: 'wallet_watchAsset',
-        params: { type: 'ERC20', options: { address: ADDR.TOKEN, symbol:'VNX', decimals:18, image:'https://crz76.github.io/vnx-assets/vnx_logo_200.png' } }
-      });
+      const eth=(chosenProvider)||(window.ethereum?.providers?.find(p=>p.isMetaMask))||window.ethereum;
+      if(!eth){alert('MetaMask non détecté');return}
+      await eth.request({ method:'wallet_watchAsset',
+        params:{ type:'ERC20', options:{ address:ADDR.TOKEN, symbol:'VNX', decimals:18, image:'https://crz76.github.io/vnx-assets/vnx_logo_200.png' } } });
     }catch(e){ console.error(e); }
   });
 
   /*************** Swap natif (V2, fee-on-transfer OK) ***************/
-  const ROUTER_ABI = [
+  const ROUTER_ABI=[
     "function getAmountsOut(uint amountIn, address[] calldata path) external view returns (uint[] memory amounts)",
     "function swapExactETHForTokensSupportingFeeOnTransferTokens(uint amountOutMin, address[] calldata path, address to, uint deadline) external payable",
     "function swapExactTokensForETHSupportingFeeOnTransferTokens(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline) external"
   ];
-  const ERC20_ABI = [
-    "function decimals() view returns(uint8)",
-    "function symbol() view returns(string)",
-    "function balanceOf(address) view returns(uint256)",
-    "function allowance(address,address) view returns(uint256)",
-    "function approve(address,uint256) returns(bool)"
+  const ERC20_ABI=[
+    "function decimals() view returns(uint8)","function symbol() view returns(string)","function balanceOf(address) view returns(uint256)",
+    "function allowance(address,address) view returns(uint256)","function approve(address,uint256) returns(bool)"
   ];
-  const routerRead = new ethersjs.Contract(ADDR.ROUTER, ROUTER_ABI, new ethersjs.JsonRpcProvider("https://cloudflare-eth.com"));
+  const routerRead=new ethersjs.Contract(ADDR.ROUTER,ROUTER_ABI,new ethersjs.JsonRpcProvider("https://cloudflare-eth.com"));
   async function quoteBuy(){
-    try{
-      const amtEth = Number(document.getElementById("ethIn").value||"0");
-      if(amtEth<=0) return;
-      const out = await routerRead.getAmountsOut(ethersjs.parseEther(String(amtEth)), [ADDR.WETH, ADDR.TOKEN]);
-      const vnx = Number(ethersjs.formatUnits(out[1], 18));
-      document.getElementById("quoteBuy").textContent = `≈ ${vnx.toFixed(6)} VNX (hors slippage)`;
-    }catch(e){ document.getElementById("quoteBuy").textContent = "—"; }
+    try{ const amtEth=Number(document.getElementById("ethIn").value||"0"); if(amtEth<=0) return;
+      const out=await routerRead.getAmountsOut(ethersjs.parseEther(String(amtEth)),[ADDR.WETH,ADDR.TOKEN]);
+      const vnx=Number(ethersjs.formatUnits(out[1],18)); document.getElementById("quoteBuy").textContent=`≈ ${vnx.toFixed(6)} VNX (hors slippage)`;
+    }catch{ document.getElementById("quoteBuy").textContent="—"; }
   }
   async function quoteSell(){
-    try{
-      const dec = 18;
-      const amtVnx = Number(document.getElementById("vnxIn").value||"0");
-      if(amtVnx<=0) return;
-      const out = await routerRead.getAmountsOut(ethersjs.parseUnits(String(amtVnx), dec), [ADDR.TOKEN, ADDR.WETH]);
-      const eth = Number(ethersjs.formatEther(out[1]));
-      document.getElementById("quoteSell").textContent = `≈ ${eth.toFixed(6)} ETH (hors slippage)`;
-    }catch(e){ document.getElementById("quoteSell").textContent = "—"; }
+    try{ const amtVnx=Number(document.getElementById("vnxIn").value||"0"); if(amtVnx<=0) return;
+      const out=await routerRead.getAmountsOut(ethersjs.parseUnits(String(amtVnx),18),[ADDR.TOKEN,ADDR.WETH]);
+      const eth=Number(ethersjs.formatEther(out[1])); document.getElementById("quoteSell").textContent=`≈ ${eth.toFixed(6)} ETH (hors slippage)`;
+    }catch{ document.getElementById("quoteSell").textContent="—"; }
   }
-  document.getElementById("btnQuoteBuy")?.addEventListener("click", quoteBuy);
-  document.getElementById("btnQuoteSell")?.addEventListener("click", quoteSell);
+  document.getElementById("btnQuoteBuy")?.addEventListener("click",quoteBuy);
+  document.getElementById("btnQuoteSell")?.addEventListener("click",quoteSell);
 
-  document.getElementById("btnSwapBuy")?.addEventListener("click", async ()=>{
+  document.getElementById("btnSwapBuy")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
-    const amtEth = Number(document.getElementById("ethIn").value||"0");
-    const slip = Number(document.getElementById("slipBuy").value||"1");
-    const deadlineMin = Number(document.getElementById("deadlineBuy").value||"15");
+    const amtEth=Number(document.getElementById("ethIn").value||"0");
+    const slip=Number(document.getElementById("slipBuy").value||"1");
+    const deadlineMin=Number(document.getElementById("deadlineBuy").value||"15");
     if(amtEth<=0) return;
-    const out = await routerRead.getAmountsOut(ethersjs.parseEther(String(amtEth)), [ADDR.WETH, ADDR.TOKEN]);
-    const outMin = out[1] - (out[1] * BigInt(Math.floor(slip*1000)) / BigInt(100000)); // ~slippage
-    const routerW = new ethersjs.Contract(ADDR.ROUTER, ROUTER_ABI, signer);
-    const to = await signer.getAddress();
-    const dl = Math.floor(Date.now()/1000) + deadlineMin*60;
-    const tx = await routerW.swapExactETHForTokensSupportingFeeOnTransferTokens(outMin, [ADDR.WETH, ADDR.TOKEN], to, dl, { value: ethersjs.parseEther(String(amtEth)) });
-    document.getElementById("quoteBuy").textContent = "Tx: "+tx.hash;
-    await tx.wait();
-    await refreshBalances();
+    const out=await routerRead.getAmountsOut(ethersjs.parseEther(String(amtEth)),[ADDR.WETH,ADDR.TOKEN]);
+    const outMin=out[1] - (out[1]*BigInt(Math.floor(slip*1000))/BigInt(100000));
+    const routerW=new ethersjs.Contract(ADDR.ROUTER,ROUTER_ABI,signer);
+    const to=await signer.getAddress(); const dl=Math.floor(Date.now()/1000)+deadlineMin*60;
+    const tx=await routerW.swapExactETHForTokensSupportingFeeOnTransferTokens(outMin,[ADDR.WETH,ADDR.TOKEN],to,dl,{value:ethersjs.parseEther(String(amtEth))});
+    document.getElementById("quoteBuy").textContent="Tx: "+tx.hash; await tx.wait();
   });
 
-  // Approve router for sell
-  document.getElementById("btnApproveRouter")?.addEventListener("click", async ()=>{
+  document.getElementById("btnApproveRouter")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
-    const erc = new ethersjs.Contract(ADDR.TOKEN, ERC20_ABI, signer);
-    const tx = await erc.approve(ADDR.ROUTER, ethersjs.MaxUint256);
-    document.getElementById("quoteSell").textContent = "Approve tx: "+tx.hash;
-    await tx.wait();
+    const erc=new ethersjs.Contract(ADDR.TOKEN,ERC20_ABI,signer);
+    const tx=await erc.approve(ADDR.ROUTER,ethersjs.MaxUint256);
+    document.getElementById("quoteSell").textContent="Approve tx: "+tx.hash; await tx.wait();
   });
 
-  document.getElementById("btnSwapSell")?.addEventListener("click", async ()=>{
+  document.getElementById("btnSwapSell")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
-    const amtVnx = Number(document.getElementById("vnxIn").value||"0");
-    const slip = Number(document.getElementById("slipSell").value||"1");
-    const deadlineMin = Number(document.getElementById("deadlineSell").value||"15");
+    const amtVnx=Number(document.getElementById("vnxIn").value||"0");
+    const slip=Number(document.getElementById("slipSell").value||"1");
+    const deadlineMin=Number(document.getElementById("deadlineSell").value||"15");
     if(amtVnx<=0) return;
-    const amtIn = ethersjs.parseUnits(String(amtVnx), 18);
-    const out = await routerRead.getAmountsOut(amtIn, [ADDR.TOKEN, ADDR.WETH]);
-    const outMin = out[1] - (out[1] * BigInt(Math.floor(slip*1000)) / BigInt(100000));
-    const routerW = new ethersjs.Contract(ADDR.ROUTER, ROUTER_ABI, signer);
-    const to = await signer.getAddress();
-    const dl = Math.floor(Date.now()/1000) + deadlineMin*60;
-    const tx = await routerW.swapExactTokensForETHSupportingFeeOnTransferTokens(amtIn, outMin, [ADDR.TOKEN, ADDR.WETH], to, dl);
-    document.getElementById("quoteSell").textContent = "Tx: "+tx.hash;
-    await tx.wait();
-    await refreshBalances();
+    const amtIn=ethersjs.parseUnits(String(amtVnx),18);
+    const out=await routerRead.getAmountsOut(amtIn,[ADDR.TOKEN,ADDR.WETH]);
+    const outMin=out[1] - (out[1]*BigInt(Math.floor(slip*1000))/BigInt(100000));
+    const routerW=new ethersjs.Contract(ADDR.ROUTER,ROUTER_ABI,signer);
+    const to=await signer.getAddress(); const dl=Math.floor(Date.now()/1000)+deadlineMin*60;
+    const tx=await routerW.swapExactTokensForETHSupportingFeeOnTransferTokens(amtIn,outMin,[ADDR.TOKEN,ADDR.WETH],to,dl);
+    document.getElementById("quoteSell").textContent="Tx: "+tx.hash; await tx.wait();
   });
 
-  /*************** Staking (générique) ***************/
-  const STAKING_ABI = [
-    "function stake(uint256) external",
-    "function withdraw(uint256) external",
-    "function getReward() external",
-    "function claim() external",
-    "function earned(address) view returns(uint256)",
-    "function balanceOf(address) view returns(uint256)"
+  /*************** Staking ***************/
+  const STAKING_ABI=[
+    "function stake(uint256) external","function withdraw(uint256) external",
+    "function getReward() external","function claim() external",
+    "function earned(address) view returns(uint256)","function balanceOf(address) view returns(uint256)"
   ];
   async function updateStakeInfo(){
     try{
-      if(!provider || !account) { document.getElementById("stakeInfo").textContent="—"; return; }
-      const staking = new ethersjs.Contract(ADDR.STAKING, STAKING_ABI, provider);
-      const [staked, earned] = await Promise.all([
-        staking.balanceOf(account).catch(()=>0n),
-        staking.earned(account).catch(()=>0n)
-      ]);
-      document.getElementById("stakeInfo").textContent =
-        `Staked: ${Number(ethersjs.formatUnits(staked,18)).toFixed(4)} VNX • Earned: ${Number(ethersjs.formatUnits(earned,18)).toFixed(4)} VNX`;
-    }catch(e){ document.getElementById("stakeInfo").textContent="—"; }
+      if(!provider||!account){ document.getElementById("stakeInfo").textContent="—"; return; }
+      const staking=new ethersjs.Contract(ADDR.STAKING,STAKING_ABI,provider);
+      const [staked,earned]=await Promise.all([staking.balanceOf(account).catch(()=>0n),staking.earned(account).catch(()=>0n)]);
+      document.getElementById("stakeInfo").textContent=`Staked: ${Number(ethersjs.formatUnits(staked,18)).toFixed(4)} VNX • Earned: ${Number(ethersjs.formatUnits(earned,18)).toFixed(4)} VNX`;
+    }catch{ document.getElementById("stakeInfo").textContent="—"; }
   }
-  // approve staking
-  document.getElementById("btnApproveStake")?.addEventListener("click", async ()=>{
+  document.getElementById("btnApproveStake")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
-    const erc = new ethersjs.Contract(ADDR.TOKEN, ERC20_ABI, signer);
-    const tx = await erc.approve(ADDR.STAKING, ethersjs.MaxUint256);
-    await tx.wait(); await updateStakeInfo(); alert("Approve OK");
+    const erc=new ethersjs.Contract(ADDR.TOKEN,ERC20_ABI,signer);
+    const tx=await erc.approve(ADDR.STAKING,ethersjs.MaxUint256); await tx.wait(); await updateStakeInfo(); alert("Approve OK");
   });
-  document.getElementById("btnStake")?.addEventListener("click", async ()=>{
+  document.getElementById("btnStake")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
-    const amt = Number(document.getElementById("stakeAmt").value||"0");
-    if(amt<=0) return;
-    const staking = new ethersjs.Contract(ADDR.STAKING, STAKING_ABI, signer);
-    const tx = await staking.stake(ethersjs.parseUnits(String(amt),18));
+    const amt=Number(document.getElementById("stakeAmt").value||"0"); if(amt<=0) return;
+    const staking=new ethersjs.Contract(ADDR.STAKING,STAKING_ABI,signer);
+    const tx=await staking.stake(ethersjs.parseUnits(String(amt),18)); await tx.wait(); await updateStakeInfo();
+  });
+  document.getElementById("btnClaim")?.addEventListener("click", async()=>{
+    if(!signer) return alert("Connecte ton wallet d'abord.");
+    const staking=new ethersjs.Contract(ADDR.STAKING,STAKING_ABI,signer);
+    let tx; try{ tx=await staking.getReward(); }catch{ tx=await staking.claim(); }
     await tx.wait(); await updateStakeInfo();
   });
-  document.getElementById("btnClaim")?.addEventListener("click", async ()=>{
+  document.getElementById("btnWithdraw")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
-    const staking = new ethersjs.Contract(ADDR.STAKING, STAKING_ABI, signer);
-    let tx; try{ tx = await staking.getReward(); }catch{ tx = await staking.claim(); }
-    await tx.wait(); await updateStakeInfo();
+    const amt=Number(document.getElementById("stakeAmt").value||"0"); if(amt<=0) return;
+    const staking=new ethersjs.Contract(ADDR.STAKING,STAKING_ABI,signer);
+    const tx=await staking.withdraw(ethersjs.parseUnits(String(amt),18)); await tx.wait(); await updateStakeInfo();
   });
-  document.getElementById("btnWithdraw")?.addEventListener("click", async ()=>{
-    if(!signer) return alert("Connecte ton wallet d'abord.");
-    const amt = Number(document.getElementById("stakeAmt").value||"0");
-    if(amt<=0) return;
-    const staking = new ethersjs.Contract(ADDR.STAKING, STAKING_ABI, signer);
-    const tx = await staking.withdraw(ethersjs.parseUnits(String(amt),18));
-    await tx.wait(); await updateStakeInfo();
-  });
-  // refresh on connect
-  (function pollStake(){ setInterval(updateStakeInfo, 8000); })();
+  setInterval(updateStakeInfo,8000);
 
   /*************** Approvals viewer / revoke ***************/
-  const allowanceOut = document.getElementById("allowanceOut");
+  const allowanceOut=document.getElementById("allowanceOut");
   document.querySelectorAll('[data-spender]').forEach(b=>{
-    b.addEventListener('click', ()=>{ document.getElementById('inpSpender').value = b.getAttribute('data-spender'); });
+    b.addEventListener('click',()=>{ document.getElementById('inpSpender').value=b.getAttribute('data-spender'); });
   });
-  document.getElementById("btnCheckAllowance")?.addEventListener("click", async ()=>{
-    if(!provider || !account) return alert("Connecte ton wallet d'abord.");
-    const spender = document.getElementById("inpSpender").value.trim();
-    if(!spender) return;
-    const erc = new ethersjs.Contract(ADDR.TOKEN, ERC20_ABI, provider);
-    const [dec,allow] = await Promise.all([
-      erc.decimals().catch(()=>18),
-      erc.allowance(account, spender)
-    ]);
-    allowanceOut.textContent = `Allowance: ${Number(ethersjs.formatUnits(allow,dec)).toFixed(6)} VNX`;
+  document.getElementById("btnCheckAllowance")?.addEventListener("click", async()=>{
+    if(!provider||!account) return alert("Connecte ton wallet d'abord.");
+    const spender=document.getElementById("inpSpender").value.trim(); if(!spender) return;
+    const erc=new ethersjs.Contract(ADDR.TOKEN,ERC20_ABI,provider);
+    const [dec,allow]=await Promise.all([erc.decimals().catch(()=>18),erc.allowance(account,spender)]);
+    allowanceOut.textContent=`Allowance: ${Number(ethersjs.formatUnits(allow,dec)).toFixed(6)} VNX`;
   });
-  document.getElementById("btnRevoke")?.addEventListener("click", async ()=>{
+  document.getElementById("btnRevoke")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
-    const spender = document.getElementById("inpSpender").value.trim();
-    if(!spender) return;
-    const erc = new ethersjs.Contract(ADDR.TOKEN, ERC20_ABI, signer);
-    const tx = await erc.approve(spender, 0);
-    allowanceOut.textContent = "Revoke tx: "+tx.hash; await tx.wait(); document.getElementById("btnCheckAllowance").click();
+    const spender=document.getElementById("inpSpender").value.trim(); if(!spender) return;
+    const erc=new ethersjs.Contract(ADDR.TOKEN,ERC20_ABI,signer);
+    const tx=await erc.approve(spender,0); allowanceOut.textContent="Revoke tx: "+tx.hash; await tx.wait(); document.getElementById("btnCheckAllowance").click();
   });
-  document.getElementById("btnMax")?.addEventListener("click", async ()=>{
+  document.getElementById("btnMax")?.addEventListener("click", async()=>{
     if(!signer) return alert("Connecte ton wallet d'abord.");
-    const spender = document.getElementById("inpSpender").value.trim();
-    if(!spender) return;
-    const erc = new ethersjs.Contract(ADDR.TOKEN, ERC20_ABI, signer);
-    const tx = await erc.approve(spender, ethersjs.MaxUint256);
-    allowanceOut.textContent = "Approve tx: "+tx.hash; await tx.wait(); document.getElementById("btnCheckAllowance").click();
+    const spender=document.getElementById("inpSpender").value.trim(); if(!spender) return;
+    const erc=new ethersjs.Contract(ADDR.TOKEN,ERC20_ABI,signer);
+    const tx=await erc.approve(spender,ethersjs.MaxUint256); allowanceOut.textContent="Approve tx: "+tx.hash; await tx.wait(); document.getElementById("btnCheckAllowance").click();
   });
   </script>
 </body>
